@@ -1,0 +1,18 @@
+{
+  "site": "Academic Door NBER Working Papers",
+  "built_at": "2026-08-04 19:35:59 北京时间",
+  "latest_week": "2026-08-03",
+  "latest_week_papers": 31,
+  "monthly_issue_count": 79,
+  "monthly_paper_count": 8609,
+  "weekly_issue_count": 1602,
+  "weekly_paper_count": 35187,
+  "weekly_translated_count": 8643,
+  "weekly_translation_coverage": 0.2456,
+  "rss": "https://academic-door.github.io/nber-working-papers-cn/feed.xml",
+  "json_feed": "https://academic-door.github.io/nber-working-papers-cn/feed.json",
+  "latest_week_url": "https://academic-door.github.io/nber-working-papers-cn/weekly/2026-08-03.html",
+  "latest_week_source": "tsv",
+  "latest_week_source_complete": true,
+  "latest_week_source_evidence": "validated ref.tsv + abs.tsv + prog.tsv + jel.tsv bundle"
+}
