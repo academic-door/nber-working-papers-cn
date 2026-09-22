@@ -81,28 +81,44 @@
       breakdown = `<div class="topic-breakdown"><p>${escapeHtml(effectiveYear)} 年主要研究方向</p><div>${chips}</div></div>`;
     }
     summary.innerHTML = `
-      <div class="topic-summary-metrics">
-        <div><span>专题总量</span><strong>${escapeHtml(topic.count)} 篇</strong></div>
-        <div><span>当前年份</span><strong>${escapeHtml(effectiveYear)} · ${effectiveCount} 篇</strong></div>
-        <div><span>时间跨度</span><strong>${firstYear && latestYear ? `${firstYear}–${latestYear}` : "—"}</strong></div>
+      <div class="topic-summary-left">
+        <div class="topic-summary-metrics">
+          <div><span>专题总量</span><strong>${escapeHtml(topic.count)} 篇</strong></div>
+          <div><span>当前年份</span><strong>${escapeHtml(effectiveYear)} · ${effectiveCount} 篇</strong></div>
+          <div><span>时间跨度</span><strong>${firstYear && latestYear ? `${firstYear}–${latestYear}` : "—"}</strong></div>
+        </div>
+        ${breakdown}
       </div>
       <div class="topic-trend">
         <div class="topic-summary-heading"><strong>近年数量</strong><small>按周报年份统计</small></div>
         ${trend}
       </div>
-      ${breakdown}
       <p class="topic-method-note">专题为站内启发式分类，用于浏览与检索，不代表 NBER 官方研究领域认定。</p>
     `;
   }
 
   function paperCard(paper) {
-    return `<article class="paper-card">
+    const detailUrl = escapeHtml(internalHref(paper.detail_url || `paper.html?number=${encodeURIComponent(paper.number)}`));
+    const zhExcerpt = paper.zh_abstract_excerpt || paper.zh_abstract || "";
+    const enExcerpt = paper.abstract_excerpt || "";
+    const zhSummary = zhExcerpt
+      ? `<div class="topic-abstract topic-abstract-zh"><span>中文摘要</span><p>${escapeHtml(zhExcerpt)} <a href="${detailUrl}">阅读全文</a></p></div>`
+      : "";
+    const enSummary = enExcerpt
+      ? (zhExcerpt
+          ? `<details class="topic-abstract-en"><summary>英文摘要</summary><p>${escapeHtml(enExcerpt)}</p></details>`
+          : `<div class="topic-abstract topic-abstract-en-direct"><span>English abstract</span><p>${escapeHtml(enExcerpt)} <a href="${detailUrl}">Read more</a></p></div>`)
+      : "";
+    return `<article class="paper-card topic-paper-card">
       <div class="meta"><span>${escapeHtml(paper.week_date)}</span><a href="${escapeHtml(paper.url)}" target="_blank" rel="noopener">NBER w${escapeHtml(paper.number)}</a></div>
-      <h3><a href="${escapeHtml(internalHref(paper.detail_url || `paper.html?number=${encodeURIComponent(paper.number)}`))}">${escapeHtml(paper.title)}</a></h3>
+      <h3><a href="${detailUrl}">${escapeHtml(paper.title)}</a></h3>
       ${paper.zh_title ? `<p class="paper-zh-title">${escapeHtml(paper.zh_title)}</p>` : ""}
-      ${paper.is_china_related ? `<a class="tag" href="${topicHref("china")}">中国相关</a>` : ""}
-      <p class="authors">${escapeHtml(paper.authors)}</p>
-      ${paper.zh_abstract ? `<p class="summary">${escapeHtml(paper.zh_abstract)}</p>` : ""}
+      <div class="topic-paper-meta">
+        ${paper.is_china_related ? `<a class="tag" href="${topicHref("china")}">中国相关</a>` : ""}
+        <p class="authors">${escapeHtml(paper.authors)}</p>
+      </div>
+      ${zhSummary}
+      ${enSummary}
     </article>`;
   }
 
