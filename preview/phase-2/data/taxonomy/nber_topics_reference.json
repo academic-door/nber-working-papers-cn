@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "authority": {
+    "authority": "NBER",
+    "source": "https://www.nber.org/research/topics",
+    "membership_contract": "reference_only_no_bulk_paper_membership_source_verified"
+  },
+  "items": [
+    {
+      "name": "Econometrics",
+      "children": [
+        "Estimation Methods",
+        "Data Collection",
+        "Experimental Design"
+      ]
+    },
+    {
+      "name": "Microeconomics",
+      "children": [
+        "Mathematical Tools",
+        "Game Theory",
+        "Households and Firms",
+        "Market Structure and Distribution",
+        "General Equilibrium",
+        "Welfare and Collective Choice",
+        "Economics of Information",
+        "Behavioral Economics"
+      ]
+    },
+    {
+      "name": "Macroeconomics",
+      "children": [
+        "Macroeconomic Models",
+        "Consumption and Investment",
+        "Business Cycles",
+        "Money and Interest Rates",
+        "Monetary Policy",
+        "Fiscal Policy"
+      ]
+    },
+    {
+      "name": "International Economics",
+      "children": [
+        "Trade",
+        "International Factor Mobility",
+        "International Finance",
+        "International Macroeconomics",
+        "Globalization and International Relations"
+      ]
+    },
+    {
+      "name": "Financial Economics",
+      "children": [
+        "Financial Markets",
+        "Financial Institutions",
+        "Corporate Finance",
+        "Behavioral Finance",
+        "Portfolio Selection and Asset Pricing"
+      ]
+    },
+    {
+      "name": "Public Economics",
+      "children": [
+        "Taxation",
+        "Public Goods",
+        "National Fiscal Issues",
+        "Subnational Fiscal Issues"
+      ]
+    },
+    {
+      "name": "Health, Education, and Welfare",
+      "children": [
+        "Health",
+        "Education",
+        "Poverty and Wellbeing"
+      ]
+    },
+    {
+      "name": "Labor Economics",
+      "children": [
+        "Demography and Aging",
+        "Labor Supply and Demand",
+        "Labor Compensation",
+        "Labor Market Structures",
+        "Labor Relations",
+        "Unemployment and Immigration",
+        "Labor Discrimination"
+      ]
+    },
+    {
+      "name": "Industrial Organization",
+      "children": [
+        "Market Structure and Firm Performance",
+        "Firm Behavior",
+        "Nonprofits",
+        "Antitrust",
+        "Regulatory Economics",
+        "Industry Studies"
+      ]
+    },
+    {
+      "name": "History",
+      "children": [
+        "Macroeconomic History",
+        "Financial History",
+        "Labor and Health History",
+        "Other History"
+      ]
+    },
+    {
+      "name": "Development and Growth",
+      "children": [
+        "Development",
+        "Innovation and R&D",
+        "Growth and Productivity",
+        "Country Studies"
+      ]
+    },
+    {
+      "name": "Environmental and Resource Economics",
+      "children": [
+        "Agriculture",
+        "Renewable Resources",
+        "Energy",
+        "Environment"
+      ]
+    },
+    {
+      "name": "Regional and Urban Economics",
+      "children": [
+        "Regional Economics",
+        "Real Estate"
+      ]
+    },
+    {
+      "name": "Other",
+      "children": [
+        "Accounting, Marketing, and Personnel",
+        "COVID-19",
+        "Culture",
+        "Economic Systems",
+        "General, Teaching",
+        "History of Economic Thought",
+        "Law and Economics",
+        "Taxation"
+      ]
+    }
+  ],
+  "paper_membership_available_locally": false
+}

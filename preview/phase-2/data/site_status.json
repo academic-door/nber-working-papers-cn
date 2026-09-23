@@ -1,0 +1,39 @@
+{
+  "site": "Academic Door NBER Working Papers",
+  "built_at": "2026-09-23 12:12:03 北京时间",
+  "latest_week": "2026-09-21",
+  "latest_week_papers": 29,
+  "monthly_issue_count": 80,
+  "monthly_paper_count": 8732,
+  "weekly_issue_count": 1616,
+  "weekly_paper_count": 35746,
+  "weekly_translated_count": 8860,
+  "weekly_translation_coverage": 0.2479,
+  "rss": "https://academic-door.github.io/nber-working-papers-cn/feed.xml",
+  "json_feed": "https://academic-door.github.io/nber-working-papers-cn/feed.json",
+  "latest_week_url": "https://academic-door.github.io/nber-working-papers-cn/weekly/2026-09-21.html",
+  "latest_week_source": "api",
+  "latest_week_source_complete": true,
+  "latest_week_source_evidence": "official New This Week marker; stable=True; official=29; retained=0",
+  "canonical_metrics": {
+    "canonical_unique_papers": 35743,
+    "weekly_occurrences": 35746,
+    "duplicate_occurrences": 3,
+    "active_valid_translated_unique": 8860,
+    "stale_translations": 1,
+    "translation_target_denominator": 9186,
+    "translation_target_coverage": 0.9645,
+    "static_valid_routes": 8860,
+    "dynamic_fallback": 26883,
+    "no_route": 0,
+    "release_evidence_expected": 14988,
+    "release_evidence_covered": 14988,
+    "release_evidence_coverage": 1.0
+  },
+  "monthly_freshness": {
+    "expected_latest_completed_month": "2026-08",
+    "actual_latest_month": "2026-08",
+    "ok": true,
+    "projection_cutover": "2026-07"
+  }
+}
