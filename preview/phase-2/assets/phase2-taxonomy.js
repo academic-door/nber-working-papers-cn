@@ -34,12 +34,11 @@
     return Number(value || 0).toLocaleString("en-US");
   }
 
-  function cardButton({ type, key, title, subtitle, total, current, authority }) {
+  function cardButton({ type, key, title, subtitle, total, current }) {
     return `<button type="button" class="taxonomy-card" data-type="${escapeHtml(type)}" data-key="${escapeHtml(key)}">
-      <span class="taxonomy-card-authority">${escapeHtml(authority)}</span>
       <strong>${escapeHtml(title)}</strong>
       ${subtitle ? `<small>${escapeHtml(subtitle)}</small>` : ""}
-      <div class="taxonomy-card-counts"><b>${escapeHtml(state.year)} · ${numberText(current)}</b><span>全库 ${numberText(total)}</span></div>
+      <div class="taxonomy-card-counts"><b>${escapeHtml(state.year)} · ${numberText(current)}</b><span>全部 ${numberText(total)}</span></div>
     </button>`;
   }
 
@@ -52,7 +51,6 @@
       subtitle: item.code,
       total: item.papers,
       current: countForYear(item, state.year),
-      authority: "NBER Program",
     })).join("");
   }
 
@@ -65,7 +63,6 @@
       subtitle: "",
       total: item.papers,
       current: countForYear(item, state.year),
-      authority: "JEL",
     })).join("");
   }
 
@@ -75,10 +72,9 @@
       type: "collection",
       key: item.id,
       title: item.name,
-      subtitle: "Academic Door 跨领域专题",
+      subtitle: "",
       total: item.papers,
       current: countForYear(item, state.year),
-      authority: "Academic Door",
     })).join("");
   }
 
@@ -98,14 +94,14 @@
   function filterLabel(filter) {
     if (filter.type === "program") {
       const item = (state.programs.items || []).find((row) => row.code === filter.key);
-      return { title: item?.name || filter.key, authority: "NBER Program", expected: countForYear(item || {}, state.year) };
+      return { title: item?.name || filter.key };
     }
     if (filter.type === "jel") {
       const item = (state.jels.items || []).find((row) => row.code === filter.key);
-      return { title: item ? `${item.code} · ${item.name}` : filter.key, authority: "JEL", expected: countForYear(item || {}, state.year) };
+      return { title: item ? `${item.code} · ${item.name}` : filter.key };
     }
     const item = (state.collections.items || []).find((row) => row.id === filter.key);
-    return { title: item?.name || filter.key, authority: "Academic Door Collection", expected: countForYear(item || {}, state.year) };
+    return { title: item?.name || filter.key };
   }
 
   async function loadTaxonomyYear(year) {
@@ -144,7 +140,7 @@
       <div class="taxonomy-tags">
         ${programs.map((name) => `<span class="program-tag">${escapeHtml(name)}</span>`).join("")}
         ${jels.slice(0, 8).map((code) => `<span class="jel-tag">${escapeHtml(code)}</span>`).join("")}
-        ${(taxonomy.collections || []).includes("china") ? '<span class="collection-tag">中国相关 · Academic Door</span>' : ""}
+        ${(taxonomy.collections || []).includes("china") ? '<span class="collection-tag">中国相关</span>' : ""}
       </div>
       ${paper.zh_abstract_excerpt ? `<p class="taxonomy-excerpt">${escapeHtml(paper.zh_abstract_excerpt)}</p>` : ""}
     </article>`;
@@ -157,7 +153,7 @@
     }
     const section = $("taxonomyResultsSection");
     section.hidden = false;
-    $("taxonomyPaperList").innerHTML = '<p class="taxonomy-loading">正在加载当前年份论文…</p>';
+    $("taxonomyPaperList").innerHTML = '<p class="taxonomy-loading">正在加载论文…</p>';
     const [taxonomyRows, searchRows] = await Promise.all([
       loadTaxonomyYear(state.year),
       loadSearchYear(state.year),
@@ -170,16 +166,15 @@
       .sort((a, b) => String(b.week_date || "").localeCompare(String(a.week_date || "")) || Number(a.index || 0) - Number(b.index || 0));
 
     const label = filterLabel(state.filter);
-    $("resultAuthority").textContent = label.authority;
     $("resultTitle").textContent = label.title;
-    $("resultMeta").textContent = `${state.year} 年 · 官方/站内 assignment 计数 ${numberText(label.expected)} 篇；当前列表匹配 ${numberText(papers.length)} 篇`;
+    $("resultMeta").textContent = `${state.year} 年 · ${numberText(papers.length)} 篇`;
 
     const visible = papers.slice(0, 80);
     $("taxonomyPaperList").innerHTML = visible.length
       ? visible.map((paper) => paperCard(paper, taxByNumber.get(String(paper.number)) || {})).join("")
       : '<p class="taxonomy-loading">当前年份没有匹配论文。</p>';
     $("taxonomyMoreNote").textContent = papers.length > visible.length
-      ? `当前 Preview 先显示前 ${visible.length} 篇，共 ${papers.length} 篇；正式交互方案再决定分页/虚拟列表。`
+      ? `当前显示前 ${visible.length} 篇，共 ${papers.length} 篇。`
       : "";
     section.scrollIntoView({ behavior: "smooth", block: "start" });
   }

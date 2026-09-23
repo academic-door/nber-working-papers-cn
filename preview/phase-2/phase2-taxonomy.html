@@ -4,35 +4,32 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>研究分类 · Phase 2 Preview｜Academic Door</title>
-  <meta name="description" content="基于 NBER Programs、JEL 与官方 Topics 参考层级的 Working Papers 研究分类预览。">
+  <title>研究分类｜Academic Door NBER 工作论文</title>
+  <meta name="description" content="按 NBER 研究项目、JEL 分类和 NBER 研究主题浏览工作论文。">
   <link rel="icon" href="assets/images/academic-door-favicon.png" type="image/png">
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="assets/phase2-taxonomy.css">
 </head>
 <body class="phase2-taxonomy-page">
-  <div role="status" style="padding:9px 16px;background:#152334;color:#fff;font:600 13px/1.4 system-ui,sans-serif;text-align:center;">Website Redesign · Phase 2 Preview · 非正式生产版本</div>
+  <div role="status" style="padding:9px 16px;background:#152334;color:#fff;font:600 13px/1.4 system-ui,sans-serif;text-align:center;">网站改版第二阶段预览 · 非正式页面</div>
   <header class="taxonomy-hero">
-    <p class="taxonomy-eyebrow">ACADEMIC DOOR · 网站改版预览</p>
-    <h1>研究分类 · Phase 2</h1>
-    <p class="taxonomy-lead">用官方结构化证据替换关键词主桶：NBER Programs 用于本地论文浏览，JEL 用于标准学科筛选；NBER Topics 保留为官方层级参考；“中国相关”单列为 Academic Door 跨领域专题。</p>
-    <p class="taxonomy-warning">这是隔离 Preview，不改变正式站现有专题与论文 membership。</p>
+    <p class="taxonomy-eyebrow">学术传送门 · NBER 工作论文</p>
+    <h1>研究分类</h1>
+    <p class="taxonomy-lead">按 NBER 研究项目、JEL 分类和研究主题浏览工作论文。</p>
   </header>
 
   <main class="taxonomy-shell">
-    <section class="taxonomy-stats" aria-label="数据覆盖">
-      <div><span>论文库</span><strong id="corpusCount">—</strong><small>canonical unique</small></div>
-      <div><span>NBER Program</span><strong id="programCoverage">—</strong><small>官方 bulk metadata</small></div>
-      <div><span>JEL</span><strong id="jelCoverage">—</strong><small>NBER assignment / AEA vocabulary</small></div>
-      <div><span>浏览年份</span><strong><select id="taxonomyYear" aria-label="浏览年份"></select></strong><small>与周报 year shard 对齐</small></div>
+    <section class="taxonomy-stats" aria-label="分类数据">
+      <div><span>论文总数</span><strong id="corpusCount">—</strong><small>篇</small></div>
+      <div><span>NBER 研究项目</span><strong id="programCoverage">—</strong><small>论文覆盖率</small></div>
+      <div><span>JEL 分类</span><strong id="jelCoverage">—</strong><small>论文覆盖率</small></div>
+      <div><span>浏览年份</span><strong><select id="taxonomyYear" aria-label="浏览年份"></select></strong><small>按年份查看</small></div>
     </section>
 
     <section class="taxonomy-section">
       <div class="taxonomy-heading">
         <div>
-          <p class="authority-label">NBER OFFICIAL · PAPER-LEVEL</p>
-          <h2>NBER Programs</h2>
-          <p>一篇论文可以属于多个 Program；不再强行选一个“主专题”。卡片同时显示当前年份与全库数量。</p>
+          <h2>NBER 研究项目</h2>
         </div>
       </div>
       <div id="programGrid" class="taxonomy-card-grid" aria-live="polite"></div>
@@ -41,9 +38,7 @@
     <section class="taxonomy-section">
       <div class="taxonomy-heading">
         <div>
-          <p class="authority-label">AEA STANDARD · NBER ASSIGNMENTS</p>
-          <h2>JEL 一级分类</h2>
-          <p>近期论文使用现代字母 JEL；历史数字旧码保留原值，不强行映射到现代分类。</p>
+          <h2>JEL 分类</h2>
         </div>
       </div>
       <div id="jelGrid" class="taxonomy-card-grid jel-grid" aria-live="polite"></div>
@@ -52,11 +47,9 @@
     <section class="taxonomy-section taxonomy-reference">
       <div class="taxonomy-heading">
         <div>
-          <p class="authority-label">NBER OFFICIAL · REFERENCE HIERARCHY</p>
-          <h2>NBER Topics</h2>
-          <p>这是 NBER 官方面向读者的层级 taxonomy。当前未发现官方 bulk/API 的逐论文 Topics membership，因此 Preview 只展示官方结构，不伪造本地论文计数。</p>
+          <h2>NBER 研究主题</h2>
         </div>
-        <a class="taxonomy-external" href="https://www.nber.org/research/topics" target="_blank" rel="noopener">查看 NBER 官方 Topics ↗</a>
+        <a class="taxonomy-external" href="https://www.nber.org/research/topics" target="_blank" rel="noopener">查看 NBER 主题目录 ↗</a>
       </div>
       <div id="topicsGrid" class="topics-reference-grid"></div>
     </section>
@@ -64,9 +57,7 @@
     <section class="taxonomy-section">
       <div class="taxonomy-heading">
         <div>
-          <p class="authority-label academic-door-label">ACADEMIC DOOR · CROSS-CUTTING COLLECTION</p>
-          <h2>Academic Door 专题</h2>
-          <p>站内产品层的跨领域集合，与 NBER 官方 Topics / Programs 明确分开。</p>
+          <h2>专题研究</h2>
         </div>
       </div>
       <div id="collectionGrid" class="taxonomy-card-grid collection-grid"></div>
@@ -75,7 +66,6 @@
     <section id="taxonomyResultsSection" class="taxonomy-results" hidden>
       <div class="taxonomy-results-head">
         <div>
-          <p class="authority-label" id="resultAuthority">—</p>
           <h2 id="resultTitle">论文</h2>
           <p id="resultMeta"></p>
         </div>
@@ -83,11 +73,6 @@
       </div>
       <div id="taxonomyPaperList" class="taxonomy-paper-list"></div>
       <p id="taxonomyMoreNote" class="taxonomy-more-note"></p>
-    </section>
-
-    <section class="taxonomy-boundary">
-      <h2>当前边界</h2>
-      <p><strong>NBER Programs</strong> 与 <strong>JEL</strong> 来自官方逐论文 bulk metadata；<strong>NBER Topics</strong> 是官方公开 taxonomy，但当前没有验证到可用于全库同步的 bulk/API membership；<strong>中国相关</strong> 是 Academic Door 自建 overlay。四者不会互相冒充。</p>
     </section>
   </main>
 
