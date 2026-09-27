@@ -59,7 +59,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: ${{ env.PRIVATE_PIPELINE_REPO }}
-          ref: migration/public-runner
+          ref: main
           token: ${{ secrets.NBER_PRODUCTION_TOKEN }}
           fetch-depth: 0
           path: pipeline
