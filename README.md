@@ -38,3 +38,5 @@ Private production/source authority remains outside this public repository. The 
 Production credentials are available only to default-branch `schedule` / `workflow_dispatch` runs. Pull-request and fork workflows are not production triggers and do not receive the production credential.
 
 The public execution workflow does not upload private delivery/cache/source artifacts.
+
+Credentialed smoke validation is performed on the migration branch before production cutover.
