@@ -3,6 +3,7 @@ name: NBER production — public runner
 on:
   push:
     branches:
+      - main
       - migration/public-runner
     paths:
       - ".github/workflows/nber-production.yml"
