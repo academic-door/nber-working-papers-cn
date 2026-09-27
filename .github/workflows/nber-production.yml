@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - migration/public-runner
     paths:
       - ".github/workflows/nber-production.yml"
       - "README.md"
@@ -55,11 +54,11 @@ jobs:
             exit 1
           fi
 
-      - name: Check out private pipeline migration branch
+      - name: Check out private NBER production authority
         uses: actions/checkout@v7
         with:
           repository: ${{ env.PRIVATE_PIPELINE_REPO }}
-          ref: migration/public-runner
+          ref: main
           token: ${{ secrets.NBER_PRODUCTION_TOKEN }}
           fetch-depth: 0
           path: pipeline
@@ -267,6 +266,37 @@ jobs:
           echo "::error::Public Pages branch did not converge to the accepted private pipeline SHA."
           exit 1
 
+      - name: Run live SEO site check
+        if: steps.detect.outputs.ready == 'true'
+        id: seo
+        continue-on-error: true
+        working-directory: pipeline
+        run: python scripts/seo_site_check.py --base https://academic-door.github.io/nber-working-papers-cn --out-dir reports
+
+      - name: Report SEO failure to private owner
+        if: steps.detect.outputs.ready == 'true' && steps.seo.outcome == 'failure'
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.NBER_PRODUCTION_TOKEN }}
+          script: |
+            const [owner, repo] = process.env.PRIVATE_PIPELINE_REPO.split('/');
+            const target = '${{ steps.detect.outputs.target_week }}';
+            const title = `[NBER SEO 检查失败] ${target}`;
+            const body = [
+              'The post-deployment live SEO check did not pass on the public runner.',
+              '',
+              `Public execution run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              '',
+              'Publication/source-truth acceptance remains separate; inspect the SEO step before changing public metadata.'
+            ].join('\n');
+            const issues = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: 'open', per_page: 100 });
+            const existing = issues.find(item => !item.pull_request && item.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({ owner, repo, issue_number: existing.number, body });
+            } else {
+              await github.rest.issues.create({ owner, repo, title, body });
+            }
+
       - name: Build deployment-linked production health
         if: steps.detect.outputs.ready == 'true'
         working-directory: pipeline
@@ -286,6 +316,58 @@ jobs:
             git commit -m "Record deployment-linked NBER health ${{ steps.detect.outputs.target_week }}"
             git push origin HEAD:main
           fi
+
+      - name: Reconcile recovered private incidents
+        if: steps.detect.outputs.ready == 'true'
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.NBER_PRODUCTION_TOKEN }}
+          script: |
+            const [owner, repo] = process.env.PRIVATE_PIPELINE_REPO.split('/');
+            const target = '${{ steps.detect.outputs.target_week }}';
+            const seoOutcome = '${{ steps.seo.outcome }}';
+            const response = await fetch('https://raw.githubusercontent.com/academic-door/nber-working-papers-cn/gh-pages/data/site_status.json');
+            if (!response.ok) throw new Error(`public site_status fetch failed: ${response.status}`);
+            const status = await response.json();
+            if (String(status.latest_week || '') !== target || status.latest_week_source_complete !== true) {
+              throw new Error('public latest week is not the accepted target; refusing incident recovery');
+            }
+            const issues = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: 'open', per_page: 100 });
+            const recoverable = issues.filter(item => {
+              if (item.pull_request) return false;
+              if (item.title === `[NBER 自动更新失败] ${target}`) return true;
+              if (item.title === `[NBER publication watchdog] ${target} official batch ready but publication not active`) return true;
+              if (seoOutcome === 'success' && item.title.startsWith('[NBER SEO 检查失败] ')) return true;
+              return false;
+            });
+            for (const issue of recoverable) {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: issue.number,
+                body: `Recovery verified by public production run ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}. Public latest week ${target} is source-complete.`
+              });
+              await github.rest.issues.update({
+                owner, repo, issue_number: issue.number, state: 'closed', state_reason: 'completed'
+              });
+            }
+
+      - name: Create public delivery acceptance marker
+        if: steps.detect.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          marker="$RUNNER_TEMP/nber-delivery.json"
+          printf '{"target_week":"%s","pipeline_sha":"%s","accepted":true}\n' \
+            "${{ steps.detect.outputs.target_week }}" "$PIPELINE_SHA" > "$marker"
+          echo "NBER_DELIVERY_MARKER=$marker" >> "$GITHUB_ENV"
+
+      - name: Publish public delivery acceptance marker
+        if: steps.detect.outputs.ready == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: nber-${{ steps.detect.outputs.target_week }}-delivery
+          path: ${{ env.NBER_DELIVERY_MARKER }}
+          retention-days: 30
+          if-no-files-found: error
 
       - name: Publication acceptance summary
         if: steps.detect.outputs.ready == 'true'
