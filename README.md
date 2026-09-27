@@ -40,3 +40,4 @@ Production credentials are available only to default-branch `schedule` / `workfl
 The public execution workflow does not upload private delivery/cache/source artifacts.
 
 Credentialed smoke validation is performed on the migration branch before production cutover.
+<!-- NBER public-runner production cutover verified against private main; see pipeline issue #94. -->
