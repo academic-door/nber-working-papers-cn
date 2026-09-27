@@ -39,16 +39,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Confirm cross-repository credential is configured
+      - name: Confirm production credentials are configured
         env:
           NBER_PRODUCTION_TOKEN: ${{ secrets.NBER_PRODUCTION_TOKEN }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         shell: bash
         run: |
           set -euo pipefail
-          test -n "$NBER_PRODUCTION_TOKEN" || {
-            echo "::error::NBER_PRODUCTION_TOKEN is not configured in the public execution repository."
+          missing=()
+          test -n "$NBER_PRODUCTION_TOKEN" || missing+=("NBER_PRODUCTION_TOKEN")
+          test -n "$DEEPSEEK_API_KEY" || missing+=("DEEPSEEK_API_KEY")
+          if [ "${#missing[@]}" -ne 0 ]; then
+            printf '::error::Missing required production secret(s): %s\n' "${missing[*]}"
             exit 1
-          }
+          fi
 
       - name: Check out private pipeline migration branch
         uses: actions/checkout@v7
