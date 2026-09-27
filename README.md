@@ -41,3 +41,4 @@ The public execution workflow does not upload private delivery/cache/source arti
 
 Credentialed smoke validation is performed on the migration branch before production cutover.
 <!-- NBER public-runner production cutover verified against private main; see pipeline issue #94. -->
+<!-- Latest private authority verified target: 124630c5932b878f957de5925fdfd7d4ee7f592f -->
