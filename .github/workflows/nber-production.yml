@@ -79,6 +79,14 @@ jobs:
         working-directory: pipeline
         run: python -m unittest discover -s tests -v
 
+      - name: Exercise real NBER detector without publication
+        working-directory: pipeline
+        run: |
+          python scripts/public_runner_release.py detect \
+            --target-week auto \
+            --confirm-seconds 0 \
+            --report reports/release-transition-public-runner-smoke.json
+
   release:
     if: github.event_name != 'push'
     runs-on: ubuntu-latest
