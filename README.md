@@ -27,3 +27,16 @@
 <p align="center">
   <img src="assets/academic-door-qr.jpg" alt="学术传送门微信公众号二维码" width="180">
 </p>
+
+
+## Production execution boundary
+
+This public repository is also the GitHub-hosted execution surface for the NBER release-critical production path.
+
+Private production/source authority remains outside this public repository. The public workflow checks out the private production worktree at runtime using a least-privilege cross-repository credential, executes the private pipeline code, persists accepted private state back to its private authority, and publishes only the already-public static site to this repository's `gh-pages` branch.
+
+Production credentials are available only to default-branch `schedule` / `workflow_dispatch` runs. Pull-request and fork workflows are not production triggers and do not receive the production credential.
+
+The public execution workflow does not upload private delivery/cache/source artifacts.
+
+Credentialed smoke validation is performed on the migration branch before production cutover.
