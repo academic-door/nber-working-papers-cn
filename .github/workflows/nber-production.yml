@@ -1,0 +1,327 @@
+name: NBER production — public runner
+
+on:
+  push:
+    branches:
+      - migration/public-runner
+    paths:
+      - ".github/workflows/nber-production.yml"
+      - "README.md"
+  workflow_dispatch:
+    inputs:
+      target_week:
+        description: "Monday week anchor (YYYY-MM-DD); blank derives it in America/New_York"
+        required: false
+        default: ""
+        type: string
+  schedule:
+    - cron: "7-52/15 18-23 * * 0"
+      timezone: "America/New_York"
+    - cron: "7-52/15 0-13 * * 1"
+      timezone: "America/New_York"
+    - cron: "7-52/15 0-13 * * 2"
+      timezone: "America/New_York"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nber-public-production
+  cancel-in-progress: false
+
+env:
+  PRIVATE_PIPELINE_REPO: academic-door/nber-working-papers-pipeline
+  PRIVATE_COMPOSER_REPO: academic-door/academic-door-composer
+
+jobs:
+  migration-smoke:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Confirm cross-repository credential is configured
+        env:
+          NBER_PRODUCTION_TOKEN: ${{ secrets.NBER_PRODUCTION_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$NBER_PRODUCTION_TOKEN" || {
+            echo "::error::NBER_PRODUCTION_TOKEN is not configured in the public execution repository."
+            exit 1
+          }
+
+      - name: Check out private pipeline migration branch
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ env.PRIVATE_PIPELINE_REPO }}
+          ref: migration/public-runner
+          token: ${{ secrets.NBER_PRODUCTION_TOKEN }}
+          fetch-depth: 0
+          path: pipeline
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Compile public-runner entrypoint
+        working-directory: pipeline
+        run: python -m py_compile scripts/public_runner_release.py
+
+      - name: Run focused public-runner contract tests
+        working-directory: pipeline
+        run: python -m unittest tests.test_public_runner_release -v
+
+      - name: Run complete private regression suite on public runner
+        working-directory: pipeline
+        run: python -m unittest discover -s tests -v
+
+  release:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Production credential preflight
+        env:
+          NBER_PRODUCTION_TOKEN: ${{ secrets.NBER_PRODUCTION_TOKEN }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          missing=()
+          test -n "$NBER_PRODUCTION_TOKEN" || missing+=("NBER_PRODUCTION_TOKEN")
+          test -n "$DEEPSEEK_API_KEY" || missing+=("DEEPSEEK_API_KEY")
+          if [ "${#missing[@]}" -ne 0 ]; then
+            printf '::error::Missing required production secret(s): %s\n' "${missing[*]}"
+            exit 1
+          fi
+
+      - name: Check out public execution host
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          path: public-host
+
+      - name: Check out private NBER production authority
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ env.PRIVATE_PIPELINE_REPO }}
+          ref: main
+          token: ${{ secrets.NBER_PRODUCTION_TOKEN }}
+          fetch-depth: 0
+          path: pipeline
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Observe official NBER release transition
+        id: detect
+        working-directory: pipeline
+        env:
+          REQUESTED_WEEK: ${{ inputs.target_week }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="${REQUESTED_WEEK:-}"
+          if [ -z "$target" ]; then target="auto"; fi
+          python scripts/public_runner_release.py detect             --target-week "$target"             --confirm-seconds 120             --report reports/release-transition-public-runner.json             --github-output "$GITHUB_OUTPUT"
+
+      - name: Summarize no-publication observation
+        if: steps.detect.outputs.ready != 'true'
+        shell: bash
+        run: |
+          {
+            echo "### NBER release observation"
+            echo ""
+            echo "- status: `${{ steps.detect.outputs.status }}`"
+            echo "- target week: `${{ steps.detect.outputs.target_week }}`"
+            echo "- publication: not dispatched"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Alert private owner if accepted evidence is missing
+        if: steps.detect.outputs.status == 'missing_previous_accepted_batch'
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.NBER_PRODUCTION_TOKEN }}
+          script: |
+            const [owner, repo] = process.env.PRIVATE_PIPELINE_REPO.split('/');
+            const target = '${{ steps.detect.outputs.target_week }}';
+            const title = `[NBER release detector blocked] ${target}`;
+            const body = [
+              'The public-runner detector cannot safely distinguish the next batch because previous accepted private evidence is missing.',
+              '',
+              `Public runner: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              '',
+              'Publication remains fail-closed.'
+            ].join('\n');
+            const issues = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: 'open', per_page: 100 });
+            const existing = issues.find(item => !item.pull_request && item.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({ owner, repo, issue_number: existing.number, body });
+            } else {
+              await github.rest.issues.create({ owner, repo, title, body });
+            }
+
+      - name: Check out private Composer only for a publishable batch
+        if: steps.detect.outputs.ready == 'true'
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ env.PRIVATE_COMPOSER_REPO }}
+          ref: main
+          token: ${{ secrets.NBER_PRODUCTION_TOKEN }}
+          fetch-depth: 1
+          path: composer
+
+      - name: Build audited NBER production bundle
+        if: steps.detect.outputs.ready == 'true'
+        working-directory: pipeline
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          CF_WEB_ANALYTICS_TOKEN: ${{ secrets.CF_WEB_ANALYTICS_TOKEN }}
+        run: |
+          python scripts/public_runner_release.py publish             --target-week "${{ steps.detect.outputs.target_week }}"             --expected-fingerprint "${{ steps.detect.outputs.fingerprint }}"             --composer-worktree "$GITHUB_WORKSPACE/composer"
+
+      - name: Commit Composer bundle
+        if: steps.detect.outputs.ready == 'true'
+        working-directory: composer
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "academic-door-bot"
+          git config user.email "academic-door-bot@users.noreply.github.com"
+          git add site/data
+          if git diff --cached --quiet; then
+            echo "Composer already contains this NBER issue."
+          else
+            git commit -m "Sync NBER ${{ steps.detect.outputs.target_week }}"
+            git push origin HEAD:main
+          fi
+
+      - name: Commit private NBER accepted state
+        if: steps.detect.outputs.ready == 'true'
+        id: private-state
+        working-directory: pipeline
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "academic-door-bot"
+          git config user.email "academic-door-bot@users.noreply.github.com"
+          git add             data/translations/nber_weekly_zh.json             sources/weekly_archive             sources/weekly_evidence             ready/weekly             reports             wechat-editor/data/latest.json
+          if git diff --cached --quiet; then
+            echo "No private-state change to commit."
+          else
+            git commit -m "Update NBER pipeline ${{ steps.detect.outputs.target_week }}"
+            git push origin HEAD:main
+          fi
+          sha="$(git rev-parse HEAD)"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "PIPELINE_SHA=$sha" >> "$GITHUB_ENV"
+
+      - name: Deploy current site to public Pages branch
+        if: steps.detect.outputs.ready == 'true'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ github.token }}
+          publish_branch: gh-pages
+          publish_dir: ./pipeline/docs
+          force_orphan: true
+          enable_jekyll: false
+          commit_message: "deploy: academic-door/nber-working-papers-pipeline@${{ steps.private-state.outputs.sha }}"
+
+      - name: Notify IndexNow
+        if: steps.detect.outputs.ready == 'true'
+        continue-on-error: true
+        working-directory: pipeline
+        run: python scripts/submit_indexnow.py --docs docs --date "${{ steps.detect.outputs.target_week }}"
+
+      - name: Read back deployed public Pages state
+        if: steps.detect.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          pages="$RUNNER_TEMP/pages-health"
+          rm -rf "$pages"
+          for attempt in 1 2 3 4 5; do
+            if git clone --depth=1 --branch gh-pages https://github.com/academic-door/nber-working-papers-cn.git "$pages"; then
+              if git -C "$pages" log -1 --pretty=%B | grep -Fq "deploy: academic-door/nber-working-papers-pipeline@${PIPELINE_SHA}"; then
+                echo "PAGES_WORKTREE=$pages" >> "$GITHUB_ENV"
+                exit 0
+              fi
+            fi
+            rm -rf "$pages"
+            sleep $((attempt * 5))
+          done
+          echo "::error::Public Pages branch did not converge to the accepted private pipeline SHA."
+          exit 1
+
+      - name: Build deployment-linked production health
+        if: steps.detect.outputs.ready == 'true'
+        working-directory: pipeline
+        run: |
+          python scripts/public_runner_release.py health             --target-week "${{ steps.detect.outputs.target_week }}"             --composer-worktree "$GITHUB_WORKSPACE/composer"             --pages-worktree "$PAGES_WORKTREE"
+
+      - name: Persist deployment-linked production health
+        if: steps.detect.outputs.ready == 'true'
+        working-directory: pipeline
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add reports/production-health-latest.json
+          if git diff --cached --quiet; then
+            echo "Production health snapshot unchanged."
+          else
+            git commit -m "Record deployment-linked NBER health ${{ steps.detect.outputs.target_week }}"
+            git push origin HEAD:main
+          fi
+
+      - name: Publication acceptance summary
+        if: steps.detect.outputs.ready == 'true'
+        run: |
+          {
+            echo "### NBER public-runner publication accepted"
+            echo ""
+            echo "- target week: `${{ steps.detect.outputs.target_week }}`"
+            echo "- private pipeline SHA: `$PIPELINE_SHA`"
+            echo "- public Pages deployment: read back"
+            echo "- Composer bundle: synchronized"
+            echo "- private accepted evidence: persisted"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Preserve fail-closed private evidence revision
+        if: failure()
+        working-directory: pipeline
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add sources/weekly_evidence/*.rev-*.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git config user.name "academic-door-bot"
+          git config user.email "academic-door-bot@users.noreply.github.com"
+          git commit -m "Preserve fail-closed NBER evidence revision"
+          git push origin HEAD:main
+
+      - name: Open or refresh private failure incident
+        if: failure()
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.NBER_PRODUCTION_TOKEN }}
+          script: |
+            const [owner, repo] = process.env.PRIVATE_PIPELINE_REPO.split('/');
+            const target = '${{ steps.detect.outputs.target_week }}' || 'unknown-week';
+            const title = `[NBER 自动更新失败] ${target}`;
+            const body = [
+              'NBER public-runner production did not complete.',
+              '',
+              `Public execution run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              '',
+              'The public site is not treated as accepted unless the deployment/readback gates complete.'
+            ].join('\n');
+            const issues = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: 'open', per_page: 100 });
+            const existing = issues.find(item => !item.pull_request && item.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({ owner, repo, issue_number: existing.number, body });
+            } else {
+              await github.rest.issues.create({ owner, repo, title, body });
+            }
