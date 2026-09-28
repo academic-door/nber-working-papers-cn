@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="msvalidate.01" content="BACE8BE20C737E80A115F8B4963BA646">
+  <meta name="google-site-verification" content="XphD8mlEyX3Qu2VNh6tzQCe0kOIoQCzUxyZTALswuTA">
+  <title>An LLM Workflow That Reproduces, Improves, and Extends Published Economics Research｜NBER w35782｜学术传送门</title>
+  <meta name="description" content="我们介绍了一个开源工作流，使LLM能够利用文章已发表的复现包来复现、改进和扩展一篇经济学文章。首先，该工作流尝试复现原始计算，检查与已发表发现之间的差异，并进行自动化敏感性分析。在五个经济学期刊的4,452个已发表复现包中，该工作流在3,460篇文章或其附录中标记出差异。其次，该工作流通过使用不同的实现或算法来改进原始计算。在496篇文章中，该工作流能够以相">
+  <meta property="og:title" content="一个能够复现、改进和扩展已发表经济学研究的LLM工作流｜NBER w35782">
+  <meta property="og:description" content="我们介绍了一个开源工作流，使LLM能够利用文章已发表的复现包来复现、改进和扩展一篇经济学文章。首先，该工作流尝试复现原始计算，检查与已发表发现之间的差异，并进行自动化敏感性分析。在五个经济学期刊的4,452个已发表复现包中，该工作流在3,460篇文章或其附录中标记出差异。其次，该工作流通过使用不同的实现或算法来改进原始计算。在496篇文章中，该工作流能够以相">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://academic-door.github.io/nber-working-papers-cn/papers/w35782.html">
+  <meta property="og:site_name" content="学术传送门 NBER 工作论文">
+  <link rel="canonical" href="https://academic-door.github.io/nber-working-papers-cn/papers/w35782.html">
+  <link rel="icon" href="../assets/images/academic-door-favicon.png" type="image/png">
+  <link rel="stylesheet" href="../assets/style.css?v=20260720-country-summary-navigation">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ScholarlyArticle","headline":"An LLM Workflow That Reproduces, Improves, and Extends Published Economics Research","name":"一个能够复现、改进和扩展已发表经济学研究的LLM工作流","url":"https://academic-door.github.io/nber-working-papers-cn/papers/w35782.html","mainEntityOfPage":"https://academic-door.github.io/nber-working-papers-cn/papers/w35782.html","identifier":"NBER Working Paper w35782","author":[{"@type":"Person","name":"Matthew Schwartz"},{"@type":"Person","name":"Isaiah Andrews"},{"@type":"Person","name":"Jesse M. Shapiro"}],"abstract":"我们介绍了一个开源工作流，使LLM能够利用文章已发表的复现包来复现、改进和扩展一篇经济学文章。首先，该工作流尝试复现原始计算，检查与已发表发现之间的差异，并进行自动化敏感性分析。在五个经济学期刊的4,452个已发表复现包中，该工作流在3,460篇文章或其附录中标记出差异。其次，该工作流通过使用不同的实现或算法来改进原始计算。在496篇文章中，该工作流能够以相似或更高的准确度将某项计算的计算时间减少超过10倍。第三，该工作流扩展了原始分析。在923篇文章中，该工作流开发出了一种未出现在原始文章中的扩展，并且该扩展与原始文章的目标和假设相一致。","inLanguage":["en","zh-CN"],"sameAs":"https://www.nber.org/papers/w35782","publisher":{"@type":"Organization","name":"National Bureau of Economic Research"},"isPartOf":{"@type":"WebSite","name":"学术传送门 NBER 工作论文","url":"https://academic-door.github.io/nber-working-papers-cn/"},"datePublished":"2026-09-28"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"主页","item":"https://academic-door.github.io/nber-working-papers-cn/"},{"@type":"ListItem","position":2,"name":"NBER w35782","item":"https://academic-door.github.io/nber-working-papers-cn/papers/w35782.html"}]}</script>
+</head>
+<body id="top" data-build-version="20260720-country-summary-navigation">
+  <header class="site-header compact detail-header">
+    <a class="detail-brand" href="../index.html">Academic Door · 学术传送门</a>
+  </header>
+  <main class="paper-page">
+    <nav class="site-nav" aria-label="站点导航"><a class="site-nav-link" href="../index.html">主页</a><a class="site-nav-link" href="../about.html">关于本站</a><a class="site-nav-link" href="../weekly/2026-09-28.html">最新周报</a><a class="site-nav-link" href="../index.html#archiveList">月度合集</a><a class="site-nav-link" href="../topics.html">研究专题</a><a class="site-nav-link" href="../feed.xml">RSS</a><span class="presence" data-presence-count aria-live="polite"></span></nav><script defer src="../assets/presence.js?v=20260720-country-summary-navigation"></script><script defer src="../assets/page-tools.js?v=20260720-country-summary-navigation"></script>
+    <article class="standalone-paper">
+      <div class="paper-detail-topline"><span>NBER Working Paper w35782</span><a href="../weekly/2026-09-28.html#w35782">所在周报</a></div>
+      <h1>An LLM Workflow That Reproduces, Improves, and Extends Published Economics Research</h1>
+      <p class="standalone-zh-title">一个能够复现、改进和扩展已发表经济学研究的LLM工作流</p>
+      <p class="authors">Matthew Schwartz, Isaiah Andrews, Jesse M. Shapiro</p>
+      <div class="paper-taxonomy">
+        <a href="../topics/other.html">其他主题</a>
+        
+        <span>未指明区域</span>
+      </div>
+      <div class="abstract-pair">
+        <section class="abstract-block"><h2>Abstract</h2><p>We introduce an open-source workflow that enables an LLM to reproduce, improve, and extend an economics article using the article’s published replication package. First, the workflow attempts to reproduce the original calculations, checks for discrepancies with published findings, and performs automated sensitivity analysis. Across 4,452 published replication packages for five economics journals, the workflow flags discrepancies in 3,460 articles or their appendices. Second, the workflow improves the original calculations by using a different implementation or algorithm. In 496 articles, the workflow is able to reduce a calculation’s computation time, at similar or greater accuracy, by more than a factor of 10. Third, the workflow extends the original analysis. In 923 articles, the workflow develops an extension that does not appear in the original article and that is aligned with the original article’s goals and assumptions.</p></section>
+        <section class="abstract-block zh-block"><h2>中文摘要</h2><p>我们介绍了一个开源工作流，使LLM能够利用文章已发表的复现包来复现、改进和扩展一篇经济学文章。首先，该工作流尝试复现原始计算，检查与已发表发现之间的差异，并进行自动化敏感性分析。在五个经济学期刊的4,452个已发表复现包中，该工作流在3,460篇文章或其附录中标记出差异。其次，该工作流通过使用不同的实现或算法来改进原始计算。在496篇文章中，该工作流能够以相似或更高的准确度将某项计算的计算时间减少超过10倍。第三，该工作流扩展了原始分析。在923篇文章中，该工作流开发出了一种未出现在原始文章中的扩展，并且该扩展与原始文章的目标和假设相一致。</p></section>
+      </div>
+      <div class="paper-actions">
+        <a class="primary-action" href="https://www.nber.org/papers/w35782" target="_blank" rel="noopener">在 NBER 阅读原文</a>
+        <button type="button" data-copy-value="https://academic-door.github.io/nber-working-papers-cn/papers/w35782.html">分享链接</button>
+        <button type="button" data-copy-value="Matthew Schwartz, Isaiah Andrews, Jesse M. Shapiro. An LLM Workflow That Reproduces, Improves, and Extends Published Economics Research. NBER Working Paper 35782. https://www.nber.org/papers/w35782">复制题录</button>
+      </div>
+      <p class="action-feedback" data-copy-feedback aria-live="polite"></p>
+    </article>
+  </main>
+  <footer><p>本站为非官方学术交流项目，论文内容与版本信息请以 NBER 官网和论文原文为准。</p></footer>
+  <script src="../assets/static-paper.js?v=20260720-country-summary-navigation"></script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"a28736d89a41412b92efe9024bfc08f2"}'></script>
+</body>
+</html>
