@@ -18,7 +18,7 @@
       });
       const data = response.ok ? await response.json() : null;
       if (data && Number.isFinite(Number(data.online))) {
-        target.innerHTML = `<span class="presence-dot">●</span><span class="presence-count">${Number(data.online)} 人在线</span>`;
+        target.innerHTML = `<span class="presence-dot">●</span><span class="presence-count">近 24 小时活跃 · ${Number(data.online)}</span>`;
       }
     } catch (_) {
       // Presence is optional and must never affect article browsing.
