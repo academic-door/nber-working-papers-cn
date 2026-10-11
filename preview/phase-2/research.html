@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>研究分类｜Academic Door NBER 工作论文</title>
+  <meta name="description" content="按 NBER 研究项目和 JEL 分类浏览工作论文，并查看 NBER 研究主题目录。">
+  <link rel="icon" href="assets/images/academic-door-favicon.png" type="image/png">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/phase2-taxonomy.css">
+</head>
+<body id="top" class="phase2-taxonomy-page">
+  <div role="status" style="padding:9px 16px;background:#152334;color:#fff;font:600 13px/1.4 system-ui,sans-serif;text-align:center;">网站改版第二阶段预览 · 非正式页面</div>
+  <header class="site-header compact">
+    <div>
+      <p class="eyebrow"><a href="index.html">学术传送门 NBER 工作论文</a></p>
+      <h1>研究分类</h1>
+      <p class="lead">按 NBER 研究项目和 JEL 分类浏览工作论文，并查看 NBER 研究主题目录。</p>
+    </div>
+  </header>
+
+  <main>
+    <nav class="site-nav" aria-label="站点导航"><a class="site-nav-link" href="index.html">主页</a><a class="site-nav-link" href="about.html">关于本站</a><a class="site-nav-link" href="weekly/2026-09-21.html">最新周报</a><a class="site-nav-link" href="index.html#archiveList">月度合集</a><a class="site-nav-link active" href="research.html">研究分类</a><a class="site-nav-link" href="feed.xml">RSS</a><span class="presence" data-presence-count aria-live="polite"></span></nav><script defer src="assets/presence.js?v=20260720-country-summary-navigation"></script><script defer src="assets/page-tools.js?v=20260720-country-summary-navigation"></script>
+    <nav class="page-tools" aria-label="页面工具">
+      <a href="index.html">返回主页</a>
+      <a href="index.html#paperList">搜索全部论文</a>
+    </nav>
+
+    <section class="taxonomy-page" aria-label="研究分类浏览">
+      <section class="taxonomy-toolbar" aria-label="分类浏览">
+        <p class="taxonomy-corpus"><strong id="corpusCount">—</strong><span> 篇论文</span></p>
+        <label for="taxonomyYear">浏览年份
+          <select id="taxonomyYear"></select>
+        </label>
+      </section>
+
+      <p id="taxonomyStatus" class="taxonomy-status" role="status" aria-live="polite"></p>
+
+      <section id="taxonomyFatal" class="taxonomy-error" role="alert" hidden>
+        <h2>分类数据暂时无法加载</h2>
+        <p id="taxonomyFatalMessage">请稍后重试，或使用站内搜索继续查找论文。</p>
+        <div class="taxonomy-error-actions">
+          <button type="button" id="retryTaxonomy">重试</button>
+          <a href="index.html#paperList">前往论文搜索</a>
+        </div>
+      </section>
+
+      <section id="taxonomyResultsSection" class="taxonomy-results" hidden>
+        <div class="taxonomy-results-head">
+          <div>
+            <p id="resultContext" class="taxonomy-result-context"></p>
+            <h2 id="resultTitle" tabindex="-1">论文</h2>
+            <p id="resultMeta"></p>
+          </div>
+          <div class="taxonomy-result-actions">
+            <button type="button" id="changeTaxonomyFilter">更改分类</button>
+            <button type="button" id="clearTaxonomyFilter">清除筛选</button>
+          </div>
+        </div>
+
+        <div id="taxonomyResultError" class="taxonomy-error compact" role="alert" hidden>
+          <p id="taxonomyResultErrorMessage"></p>
+          <button type="button" id="retryTaxonomyResults">重试</button>
+        </div>
+
+        <div id="taxonomyPaperList" class="taxonomy-paper-list"></div>
+
+        <nav id="taxonomyPagination" class="taxonomy-pagination" aria-label="分类结果分页" hidden>
+          <button type="button" id="taxonomyPrevPage">上一页</button>
+          <span id="taxonomyPageInfo"></span>
+          <button type="button" id="taxonomyNextPage">下一页</button>
+        </nav>
+      </section>
+
+      <details class="taxonomy-section taxonomy-group" id="programsSection" open>
+        <summary class="taxonomy-group-summary">
+          <span><strong>NBER 研究项目</strong><small>NBER 的研究项目；论文可同时关联多个项目。</small></span>
+        </summary>
+        <div id="programGrid" class="taxonomy-card-grid"></div>
+      </details>
+
+      <details class="taxonomy-section taxonomy-group" id="jelSection">
+        <summary class="taxonomy-group-summary">
+          <span><strong>JEL 分类</strong><small>经济学文献常用分类；论文可有多个 JEL 代码。</small></span>
+        </summary>
+        <p id="jelHistoricalNote" class="taxonomy-era-note" hidden>早期论文使用过旧版 JEL 编码，部分论文不会出现在下列字母分类中。</p>
+        <div id="jelGrid" class="taxonomy-card-grid jel-grid"></div>
+      </details>
+
+      <details class="taxonomy-section taxonomy-group taxonomy-reference" id="topicsSection">
+        <summary class="taxonomy-group-summary">
+          <span><strong>NBER 研究主题</strong><small>NBER 官方研究主题目录。</small></span>
+        </summary>
+        <p class="taxonomy-group-action"><a class="taxonomy-external" href="https://www.nber.org/research/topics" target="_blank" rel="noopener">查看 NBER 主题目录 ↗</a></p>
+        <div id="topicsGrid" class="topics-reference-grid"></div>
+      </details>
+
+      <details class="taxonomy-section taxonomy-group" id="collectionsSection" open>
+        <summary class="taxonomy-group-summary">
+          <span><strong>学术传送门专题</strong><small>本站整理的跨分类专题。</small></span>
+        </summary>
+        <div id="collectionGrid" class="taxonomy-card-grid collection-grid"></div>
+      </details>
+    </section>
+  </main>
+
+  <footer>
+    <p><a href="index.html">返回主页</a></p>
+    <p>网站更新时间：2026-10-11 19:33:38 北京时间。</p>
+  </footer>
+  <script src="assets/phase2-taxonomy.js"></script>
+</body>
+</html>
