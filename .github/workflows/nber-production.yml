@@ -256,6 +256,38 @@ jobs:
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
           echo "PIPELINE_SHA=$sha" >> "$GITHUB_ENV"
 
+      # The weekly production deploy force-orphans gh-pages. Preserve only
+      # explicitly isolated noindex design previews before replacing the root.
+      # Production remains authoritative for every other public site path.
+      - name: Retain isolated website design previews across weekly deploy
+        if: steps.detect.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          old_pages="$RUNNER_TEMP/previous-public-pages"
+          git clone --quiet --depth=1 --branch gh-pages \
+            https://github.com/academic-door/nber-working-papers-cn.git "$old_pages"
+          for phase in phase-1 phase-2; do
+            source_dir="$old_pages/preview/$phase"
+            if [ ! -d "$source_dir" ]; then
+              echo "No published $phase preview to preserve."
+              continue
+            fi
+            if [ ! -f "$source_dir/index.html" ] || \
+                ! grep -Fq 'noindex,nofollow,noarchive' "$source_dir/index.html"; then
+              echo "::error::Refusing to republish $phase preview without its noindex contract."
+              exit 1
+            fi
+            destination="pipeline/docs/preview/$phase"
+            if [ -e "$destination" ]; then
+              echo "::error::Generated production output unexpectedly includes $destination."
+              exit 1
+            fi
+            mkdir -p "$destination"
+            cp -a "$source_dir/." "$destination/"
+            echo "Preserved public-safe $phase preview."
+          done
+
       - name: Deploy current site to public Pages branch
         if: steps.detect.outputs.ready == 'true'
         uses: peaceiris/actions-gh-pages@v4
