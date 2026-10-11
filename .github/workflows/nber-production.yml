@@ -87,24 +87,6 @@ jobs:
             --confirm-seconds 0 \
             --report reports/release-transition-public-runner-smoke.json
 
-      # One-time permission probe on a trusted post-merge push only; no
-      # client_payload, ref or workflow selection is supplied to the receiver.
-      - name: Verify NBER token can request the Composer reconcile fast path
-        if: contains(github.event.head_commit.message, '[composer-reconcile-probe]')
-        env:
-          GH_TOKEN: ${{ secrets.NBER_PRODUCTION_TOKEN }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          if gh api --method POST \
-              repos/academic-door/academic-door-composer-runner/dispatches \
-              -f event_type=composer-reconcile >/dev/null 2>&1; then
-            echo "Composer reconcile repository_dispatch: accepted." >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "::error::NEEDS_REQUEST_TOKEN: add only academic-door/academic-door-composer-runner Contents:write to the authorized sender credential."
-            exit 1
-          fi
-
   release:
     if: github.event_name != 'push'
     runs-on: ubuntu-latest
