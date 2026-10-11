@@ -725,6 +725,17 @@ mark {
   font-weight: 700;
 }
 
+/* Reader-approved title treatment from Phase 2 preview (home + search). */
+.week-card h3 a,
+.paper-card h3 a {
+  color: var(--accent);
+}
+
+.week-card .zh-title a,
+.paper-zh-title a {
+  color: var(--text);
+}
+
 .meta {
   display: flex;
   flex-wrap: wrap;
