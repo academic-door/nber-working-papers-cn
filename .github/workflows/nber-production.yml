@@ -87,6 +87,24 @@ jobs:
             --confirm-seconds 0 \
             --report reports/release-transition-public-runner-smoke.json
 
+      # One-time permission probe on a trusted post-merge push only; no
+      # client_payload, ref or workflow selection is supplied to the receiver.
+      - name: Verify NBER token can request the Composer reconcile fast path
+        if: contains(github.event.head_commit.message, '[composer-reconcile-probe]')
+        env:
+          GH_TOKEN: ${{ secrets.NBER_PRODUCTION_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh api --method POST \
+              repos/academic-door/academic-door-composer-runner/dispatches \
+              -f event_type=composer-reconcile >/dev/null 2>&1; then
+            echo "Composer reconcile repository_dispatch: accepted." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::error::NEEDS_REQUEST_TOKEN: add only academic-door/academic-door-composer-runner Contents:write to the authorized sender credential."
+            exit 1
+          fi
+
   release:
     if: github.event_name != 'push'
     runs-on: ubuntu-latest
@@ -195,6 +213,7 @@ jobs:
 
       - name: Commit Composer bundle
         if: steps.detect.outputs.ready == 'true'
+        id: composer-sync
         working-directory: composer
         shell: bash
         run: |
@@ -204,9 +223,35 @@ jobs:
           git add site/data
           if git diff --cached --quiet; then
             echo "Composer already contains this NBER issue."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "Sync NBER ${{ steps.detect.outputs.target_week }}"
             git push origin HEAD:main
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Request-only fast path: the trusted ⑥ receiver independently resolves
+      # Composer private main and decides whether runtime deploy is required.
+      # The event carries no target/ref/payload and grants no deploy authority.
+      - name: Request Composer reconcile after accepted sync
+        if: steps.detect.outputs.ready == 'true' && steps.composer-sync.outputs.pushed == 'true'
+        id: composer-reconcile
+        env:
+          GH_TOKEN: ${{ secrets.NBER_PRODUCTION_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh api --method POST \
+              repos/academic-door/academic-door-composer-runner/dispatches \
+              -f event_type=composer-reconcile >/dev/null 2>&1; then
+            echo "outcome=requested" >> "$GITHUB_OUTPUT"
+            echo "Composer reconcile: REQUESTED (⑥ owns deployment/acceptance)." >> "$GITHUB_STEP_SUMMARY"
+          else
+            # Fast-path signaling is optional. The ⑥ scheduled reconciler stays
+            # authoritative fallback; never fail a valid NBER publication.
+            echo "outcome=unavailable" >> "$GITHUB_OUTPUT"
+            echo "::warning::Composer reconcile request unavailable; ⑥ schedule remains fallback. Check NBER_PRODUCTION_TOKEN scope for composer-runner Contents:write."
+            echo "Composer reconcile: UNAVAILABLE (⑥ scheduled fallback)." >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Commit private NBER accepted state
