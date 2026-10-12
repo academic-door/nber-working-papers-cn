@@ -24,7 +24,7 @@ concurrency:
 
 jobs:
   maintain:
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.event.head_commit.message == 'feat: bootstrap bounded NBER site-maintenance workflow [site-maintenance-bootstrap]') }}
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'feat: bootstrap bounded NBER site-maintenance workflow [site-maintenance-bootstrap]')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     env:
