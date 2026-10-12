@@ -200,7 +200,10 @@ jobs:
             rm -rf "$dest"
             if git clone --quiet --depth=1 --branch gh-pages \
                 https://github.com/academic-door/nber-working-papers-cn.git "$dest"; then
-              if [ "$(git -C "$dest" log -1 --pretty=%s)" = "$expected" ]; then
+              # peaceiris appends the public workflow SHA to commit_message;
+              # bind both audited owner SHA and invoking workflow SHA.
+              actual="$(git -C "$dest" log -1 --pretty=%s)"
+              if [ "$actual" = "$expected $GITHUB_SHA" ]; then
                 echo "PUBLIC_DEPLOY_SHA=$(git -C "$dest" rev-parse HEAD)" >> "$GITHUB_ENV"
                 exit 0
               fi
