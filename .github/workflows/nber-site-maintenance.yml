@@ -1,0 +1,236 @@
+name: NBER site-only maintenance
+
+# This public repository is the execution host; source/build logic stays private.
+# A narrowly named one-time push bootstraps the first user-approved deployment.
+# Subsequent website maintenance runs are explicit workflow_dispatch only.
+on:
+  workflow_dispatch:
+    inputs:
+      expected_week:
+        description: "Optional accepted NBER Monday week to assert; blank follows published Pages"
+        required: false
+        type: string
+        default: ""
+  push:
+    branches: [main]
+    paths: [".github/workflows/nber-site-maintenance.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nber-public-production
+  cancel-in-progress: false
+
+jobs:
+  maintain:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'feat: bootstrap bounded NBER site-maintenance workflow [site-maintenance-bootstrap]')) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      DEEPSEEK_API_KEY: ""
+      LLM_API_KEY: ""
+    steps:
+      - name: Check out public workflow authority
+        uses: actions/checkout@v7
+
+      - name: Check out private ③ NBER build authority (read-only)
+        uses: actions/checkout@v7
+        with:
+          repository: academic-door/nber-working-papers-pipeline
+          ref: main
+          path: pipeline
+          token: ${{ secrets.NBER_PRODUCTION_TOKEN }}
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Read accepted public week and preserve prior Pages SHA
+        id: baseline
+        env:
+          EXPECTED_WEEK: ${{ inputs.expected_week }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          prior="$RUNNER_TEMP/current-gh-pages"
+          git clone --quiet --depth=1 --branch gh-pages \
+            https://github.com/academic-door/nber-working-papers-cn.git "$prior"
+          echo "PREVIOUS_PUBLIC_SHA=$(git -C "$prior" rev-parse HEAD)" >> "$GITHUB_ENV"
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os
+          from pathlib import Path
+          root = Path(os.environ["RUNNER_TEMP"]) / "current-gh-pages" / "data"
+          status = json.loads((root / "site_status.json").read_text(encoding="utf-8"))
+          marker = json.loads((root / "latest_week.json").read_text(encoding="utf-8"))
+          week = str(status["latest_week"])
+          expected = str(os.environ.get("EXPECTED_WEEK") or "").strip()
+          assert not expected or expected == week, "requested week is not the published accepted week"
+          assert marker["accepted"] is True and marker["source_complete"] is True
+          assert status["latest_week_source_complete"] is True
+          assert marker["week"] == week
+          assert marker["paper_count"] == status["latest_week_papers"]
+          assert marker["built_at"] == status["built_at"]
+          print(f"week={week}")
+          print(f"count={marker['paper_count']}")
+          PY
+          echo "PIPELINE_SHA=$(git -C pipeline rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Execute owner-site maintenance regression guard
+        working-directory: pipeline
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest \
+            tests.test_site_maintenance_acceptance \
+            tests.test_site_sync_timestamp \
+            tests.test_user_report_oct12 -v
+
+      - name: Reconstruct already-accepted week without release detection
+        working-directory: pipeline
+        shell: bash
+        env:
+          ACCEPTED_WEEK: ${{ steps.baseline.outputs.week }}
+        run: |
+          set -euo pipefail
+          python scripts/prepare_release_rehearsal.py \
+            --week "$ACCEPTED_WEEK" \
+            --report "$RUNNER_TEMP/site-maintenance-evidence.json"
+
+      - name: Retrieve official NBER metadata for deterministic rebuild
+        working-directory: pipeline
+        run: python scripts/download_nber_metadata.py --output "$RUNNER_TEMP/nber-meta"
+
+      - name: Build full website from accepted evidence and cached translations only
+        working-directory: pipeline
+        env:
+          ACCEPTED_WEEK: ${{ steps.baseline.outputs.week }}
+          CF_WEB_ANALYTICS_TOKEN: ${{ secrets.CF_WEB_ANALYTICS_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/build_site.py \
+            --source sources/monthly_ready \
+            --metadata-source "$RUNNER_TEMP/nber-meta" \
+            --translation-cache data/translations/nber_weekly_zh.json \
+            --include-api-weekly \
+            --api-weekly-source sources/api_weekly \
+            --target-week "$ACCEPTED_WEEK" \
+            --published-site-reference "$RUNNER_TEMP/current-gh-pages" \
+            --output "$RUNNER_TEMP/nber-site-only"
+
+      - name: Source-truth and full site quality gates
+        working-directory: pipeline
+        env:
+          ACCEPTED_WEEK: ${{ steps.baseline.outputs.week }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/audit_translation_quality.py \
+            --docs "$RUNNER_TEMP/nber-site-only" \
+            --date "$ACCEPTED_WEEK" \
+            --json-output "$RUNNER_TEMP/site-translation-quality.json" \
+            --markdown-output "$RUNNER_TEMP/site-translation-quality.md"
+          python scripts/build_weekly_ready.py \
+            --date "$ACCEPTED_WEEK" \
+            --docs "$RUNNER_TEMP/nber-site-only" \
+            --output-dir "$RUNNER_TEMP/site-ready" \
+            --qa-json "$RUNNER_TEMP/site-ready-qa.json"
+          python scripts/qa_site.py \
+            --docs "$RUNNER_TEMP/nber-site-only" \
+            --strict-latest "$ACCEPTED_WEEK" \
+            --ready-dir "$RUNNER_TEMP/site-ready" \
+            --summary "$RUNNER_TEMP/site-maintenance-qa.json"
+
+      - name: Preserve isolated noindex design previews byte-for-byte
+        shell: bash
+        run: |
+          set -euo pipefail
+          for phase in phase-1 phase-2; do
+            old="$RUNNER_TEMP/current-gh-pages/preview/$phase"
+            if [ ! -e "$old" ]; then continue; fi
+            if [ ! -f "$old/index.html" ] || \
+               ! grep -Fq 'noindex,nofollow,noarchive' "$old/index.html"; then
+              echo "::error::Untrusted preview/$phase; deployment refused."
+              exit 1
+            fi
+            new="$RUNNER_TEMP/nber-site-only/preview/$phase"
+            test ! -e "$new" || { echo "::error::Generated preview collision."; exit 1; }
+            mkdir -p "$new"
+            cp -a "$old/." "$new/"
+          done
+
+      - name: Fail closed before deployment on any changed accepted-week contract
+        working-directory: pipeline
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/verify_site_maintenance_bundle.py \
+            --reference "$RUNNER_TEMP/current-gh-pages" \
+            --candidate "$RUNNER_TEMP/nber-site-only" \
+            | tee "$RUNNER_TEMP/site-maintenance-acceptance.json"
+          remote_sha="$(git ls-remote \
+            https://github.com/academic-door/nber-working-papers-cn.git \
+            refs/heads/gh-pages | awk '{print $1}')"
+          if [ "$remote_sha" != "$PREVIOUS_PUBLIC_SHA" ]; then
+            echo "::error::Public Pages changed since the acceptance snapshot; aborting maintenance."
+            exit 1
+          fi
+
+      - name: Publish audited site-only changes to existing GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ github.token }}
+          publish_branch: gh-pages
+          publish_dir: ${{ runner.temp }}/nber-site-only
+          force_orphan: true
+          enable_jekyll: false
+          commit_message: "site-maintenance: academic-door/nber-working-papers-pipeline@${{ env.PIPELINE_SHA }}"
+
+      - name: Read back exact deployed Pages commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="site-maintenance: academic-door/nber-working-papers-pipeline@$PIPELINE_SHA"
+          for attempt in 1 2 3 4 5; do
+            dest="$RUNNER_TEMP/deployed-pages"
+            rm -rf "$dest"
+            if git clone --quiet --depth=1 --branch gh-pages \
+                https://github.com/academic-door/nber-working-papers-cn.git "$dest"; then
+              if [ "$(git -C "$dest" log -1 --pretty=%s)" = "$expected" ]; then
+                echo "PUBLIC_DEPLOY_SHA=$(git -C "$dest" rev-parse HEAD)" >> "$GITHUB_ENV"
+                exit 0
+              fi
+            fi
+            sleep $((attempt * 5))
+          done
+          echo "::error::Public Pages did not converge to this audited site-only commit."
+          exit 1
+
+      - name: Independently verify live public Pages accepted-week invariants
+        working-directory: pipeline
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/verify_site_maintenance_bundle.py \
+            --reference "$RUNNER_TEMP/current-gh-pages" \
+            --candidate "$RUNNER_TEMP/deployed-pages"
+          echo "### NBER site-only maintenance deployment verified" >> "$GITHUB_STEP_SUMMARY"
+          printf '\n- Published Pages SHA: `%s`\n' "$PUBLIC_DEPLOY_SHA" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Accepted NBER week unchanged; no Composer dispatch or translation call." >> "$GITHUB_STEP_SUMMARY"
+          echo "- Latest visible website update timestamp unchanged." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload public-safe site-only QA evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nber-site-only-acceptance
+          path: |
+            ${{ runner.temp }}/site-maintenance-evidence.json
+            ${{ runner.temp }}/site-maintenance-qa.json
+            ${{ runner.temp }}/site-maintenance-acceptance.json
+          retention-days: 30
+          if-no-files-found: warn
