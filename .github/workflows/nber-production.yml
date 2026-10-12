@@ -140,13 +140,16 @@ jobs:
 
       - name: Summarize no-publication observation
         if: steps.detect.outputs.ready != 'true'
+        env:
+          DETECTION_STATUS: ${{ steps.detect.outputs.status }}
+          DETECTION_WEEK: ${{ steps.detect.outputs.target_week }}
         shell: bash
         run: |
           {
             echo "### NBER release observation"
             echo ""
-            echo "- status: `${{ steps.detect.outputs.status }}`"
-            echo "- target week: `${{ steps.detect.outputs.target_week }}`"
+            printf -- '- status: `%s`\n' "$DETECTION_STATUS"
+            printf -- '- target week: `%s`\n' "$DETECTION_WEEK"
             echo "- publication: not dispatched"
           } >> "$GITHUB_STEP_SUMMARY"
 
