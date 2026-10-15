@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="msvalidate.01" content="BACE8BE20C737E80A115F8B4963BA646">
+  <meta name="google-site-verification" content="XphD8mlEyX3Qu2VNh6tzQCe0kOIoQCzUxyZTALswuTA">
+  <title>Inference for Regression with Clustered or Spatially Correlated Data I: Framework and Clustering｜NBER w35800｜学术传送门</title>
+  <meta name="description" content="许多回归分析使用的观测值在互不相关的聚类内相关，和/或在距离或其他空间度量上相关。这类数据通常呈正相关。与独立观测值的默认情形相比，这会降低额外一个观测值所包含的信息量。因此，未能针对这种相关性调整标准误会导致置信区间过窄，并导致假设检验过度拒绝。在本文中，我们首先提供一个一般框架。然后，我们关注当观测值在聚类内相关且跨聚类不相关时的推断。我们详细介绍了聚类">
+  <meta property="og:title" content="聚类或空间相关数据下的回归推断I：框架与聚类｜NBER w35800">
+  <meta property="og:description" content="许多回归分析使用的观测值在互不相关的聚类内相关，和/或在距离或其他空间度量上相关。这类数据通常呈正相关。与独立观测值的默认情形相比，这会降低额外一个观测值所包含的信息量。因此，未能针对这种相关性调整标准误会导致置信区间过窄，并导致假设检验过度拒绝。在本文中，我们首先提供一个一般框架。然后，我们关注当观测值在聚类内相关且跨聚类不相关时的推断。我们详细介绍了聚类">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://academic-door.github.io/nber-working-papers-cn/papers/w35800.html">
+  <meta property="og:site_name" content="学术传送门 NBER 工作论文">
+  <link rel="canonical" href="https://academic-door.github.io/nber-working-papers-cn/papers/w35800.html">
+  <link rel="icon" href="../assets/images/academic-door-favicon.png" type="image/png">
+  <link rel="stylesheet" href="../assets/style.css?v=20261013-monthly-accepted-pairs-fast-china">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ScholarlyArticle","headline":"Inference for Regression with Clustered or Spatially Correlated Data I: Framework and Clustering","name":"聚类或空间相关数据下的回归推断I：框架与聚类","url":"https://academic-door.github.io/nber-working-papers-cn/papers/w35800.html","mainEntityOfPage":"https://academic-door.github.io/nber-working-papers-cn/papers/w35800.html","identifier":"NBER Working Paper w35800","author":[{"@type":"Person","name":"A. Colin Cameron"},{"@type":"Person","name":"Douglas L. Miller"}],"abstract":"许多回归分析使用的观测值在互不相关的聚类内相关，和/或在距离或其他空间度量上相关。这类数据通常呈正相关。与独立观测值的默认情形相比，这会降低额外一个观测值所包含的信息量。因此，未能针对这种相关性调整标准误会导致置信区间过窄，并导致假设检验过度拒绝。在本文中，我们首先提供一个一般框架。然后，我们关注当观测值在聚类内相关且跨聚类不相关时的推断。我们详细介绍了聚类稳健推断方法，特别是当聚类数量不多时能够提供改进的有限样本表现的方法。此类调整通常是必要的。配套论文Cameron and Miller（2026）介绍了当相关性随观测值之间的距离在空间上衰减时的推断。这两篇论文旨在为实证研究者提供指南。","inLanguage":["en","zh-CN"],"sameAs":"https://www.nber.org/papers/w35800","publisher":{"@type":"Organization","name":"National Bureau of Economic Research"},"isPartOf":{"@type":"WebSite","name":"学术传送门 NBER 工作论文","url":"https://academic-door.github.io/nber-working-papers-cn/"},"datePublished":"2026-10-05"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"主页","item":"https://academic-door.github.io/nber-working-papers-cn/"},{"@type":"ListItem","position":2,"name":"NBER w35800","item":"https://academic-door.github.io/nber-working-papers-cn/papers/w35800.html"}]}</script>
+</head>
+<body id="top" data-build-version="20261013-monthly-accepted-pairs-fast-china">
+  <header class="site-header compact detail-header">
+    <a class="detail-brand" href="../index.html">Academic Door · 学术传送门</a>
+  </header>
+  <main class="paper-page">
+    <nav class="site-nav" aria-label="站点导航"><a class="site-nav-link" href="../index.html">主页</a><a class="site-nav-link" href="../about.html">关于本站</a><a class="site-nav-link" href="../weekly/2026-10-12.html">最新周报</a><a class="site-nav-link" href="../index.html#archiveList">月度合集</a><a class="site-nav-link" href="../topics.html">研究专题</a><a class="site-nav-link" href="../feed.xml">RSS</a><span class="presence" data-presence-count aria-live="polite"></span></nav><script defer src="../assets/presence.js?v=20261013-monthly-accepted-pairs-fast-china"></script><script defer src="../assets/page-tools.js?v=20261013-monthly-accepted-pairs-fast-china"></script>
+    <article class="standalone-paper">
+      <div class="paper-detail-topline"><span>NBER Working Paper w35800</span><a href="../weekly/2026-10-05.html#w35800">所在周报</a></div>
+      <h1>Inference for Regression with Clustered or Spatially Correlated Data I: Framework and Clustering</h1>
+      <p class="standalone-zh-title">聚类或空间相关数据下的回归推断I：框架与聚类</p>
+      <p class="authors">A. Colin Cameron, Douglas L. Miller</p>
+      <div class="paper-taxonomy">
+        <a href="../topics/other.html">其他主题</a>
+        
+        <span>未指明区域</span>
+      </div>
+      <div class="abstract-pair">
+        <section class="abstract-block"><h2>Abstract</h2><p>Many regression analyses use observations that are correlated within uncorrelated clusters and/or are correlated in distance or other spatial measure. Such data are often positively correlated. This reduces the information content of an additional observation compared to the default of independent observations. Consequently, failure to adjust standard errors for such correlation leads to confidence intervals that are too narrow, and to hypothesis tests that over reject. In this paper we first provide a general framework. We then focus on inference when observations are correlated within cluster and uncorrelated across clusters. We detail cluster-robust inference methods, particularly methods that provide improved finite-sample performance when there is not a large number of clusters. Such adjustments are often necessary. A companion paper, Cameron and Miller (2026), presents inference when correlation is spatially dampening in the distance between observations. The two papers are intended to provide a guide to empirical researchers.</p></section>
+        <section class="abstract-block zh-block"><h2>中文摘要</h2><p>许多回归分析使用的观测值在互不相关的聚类内相关，和/或在距离或其他空间度量上相关。这类数据通常呈正相关。与独立观测值的默认情形相比，这会降低额外一个观测值所包含的信息量。因此，未能针对这种相关性调整标准误会导致置信区间过窄，并导致假设检验过度拒绝。在本文中，我们首先提供一个一般框架。然后，我们关注当观测值在聚类内相关且跨聚类不相关时的推断。我们详细介绍了聚类稳健推断方法，特别是当聚类数量不多时能够提供改进的有限样本表现的方法。此类调整通常是必要的。配套论文Cameron and Miller（2026）介绍了当相关性随观测值之间的距离在空间上衰减时的推断。这两篇论文旨在为实证研究者提供指南。</p></section>
+      </div>
+      <div class="paper-actions">
+        <a class="primary-action" href="https://www.nber.org/papers/w35800" target="_blank" rel="noopener">在 NBER 阅读原文</a>
+        <button type="button" data-copy-value="https://academic-door.github.io/nber-working-papers-cn/papers/w35800.html">分享链接</button>
+        <button type="button" data-copy-value="A. Colin Cameron, Douglas L. Miller. Inference for Regression with Clustered or Spatially Correlated Data I: Framework and Clustering. NBER Working Paper 35800. https://www.nber.org/papers/w35800">复制题录</button>
+      </div>
+      <p class="action-feedback" data-copy-feedback aria-live="polite"></p>
+    </article>
+  </main>
+  <footer><p>本站为非官方学术交流项目，论文内容与版本信息请以 NBER 官网和论文原文为准。</p></footer>
+  <script src="../assets/static-paper.js?v=20261013-monthly-accepted-pairs-fast-china"></script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"a28736d89a41412b92efe9024bfc08f2"}'></script>
+</body>
+</html>
