@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="msvalidate.01" content="BACE8BE20C737E80A115F8B4963BA646">
+  <meta name="google-site-verification" content="XphD8mlEyX3Qu2VNh6tzQCe0kOIoQCzUxyZTALswuTA">
+  <title>Indirect Variational Inference: Applications to Earnings Dynamics｜NBER w35877｜学术传送门</title>
+  <meta name="description" content="潜变量模型是经济学的核心，但往往涉及难以处理的积分。变分推断（VI）在机器学习中被广泛使用，它通过用变分目标替代似然，将这种积分转化为可处理、可微的优化。然而，当变分族不够灵活时，恢复真实参数的保证仍然有限——这是VI在经济学中被采用的一个关键障碍。我们首先在收入动态模型中评估VI，并表明变分后验的选择至关重要。然后我们引入间接变分推断（IVI），它将VI视">
+  <meta property="og:title" content="间接变分推断：在收入动态中的应用｜NBER w35877">
+  <meta property="og:description" content="潜变量模型是经济学的核心，但往往涉及难以处理的积分。变分推断（VI）在机器学习中被广泛使用，它通过用变分目标替代似然，将这种积分转化为可处理、可微的优化。然而，当变分族不够灵活时，恢复真实参数的保证仍然有限——这是VI在经济学中被采用的一个关键障碍。我们首先在收入动态模型中评估VI，并表明变分后验的选择至关重要。然后我们引入间接变分推断（IVI），它将VI视">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://academic-door.github.io/nber-working-papers-cn/papers/w35877.html">
+  <meta property="og:site_name" content="学术传送门 NBER 工作论文">
+  <link rel="canonical" href="https://academic-door.github.io/nber-working-papers-cn/papers/w35877.html">
+  <link rel="icon" href="../assets/images/academic-door-favicon.png" type="image/png">
+  <link rel="stylesheet" href="../assets/style.css?v=20261020-warm-search-p95">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ScholarlyArticle","headline":"Indirect Variational Inference: Applications to Earnings Dynamics","name":"间接变分推断：在收入动态中的应用","url":"https://academic-door.github.io/nber-working-papers-cn/papers/w35877.html","mainEntityOfPage":"https://academic-door.github.io/nber-working-papers-cn/papers/w35877.html","identifier":"NBER Working Paper w35877","author":[{"@type":"Person","name":"Neele L. Balke"},{"@type":"Person","name":"Stéphane Bonhomme"},{"@type":"Person","name":"Thibaut Lamadon"}],"abstract":"潜变量模型是经济学的核心，但往往涉及难以处理的积分。变分推断（VI）在机器学习中被广泛使用，它通过用变分目标替代似然，将这种积分转化为可处理、可微的优化。然而，当变分族不够灵活时，恢复真实参数的保证仍然有限——这是VI在经济学中被采用的一个关键障碍。我们首先在收入动态模型中评估VI，并表明变分后验的选择至关重要。然后我们引入间接变分推断（IVI），它将VI视为一个辅助模型，并校正由变分近似所导致的偏差。IVI保留了VI的大部分可处理性，因为它不需要计算似然。我们将这些方法应用于允许非线性持续性、非高斯且序列相关的暂时性冲击以及潜在异质性的模型。在模拟和实证应用中，灵活的变分族与IVI相结合能够提供可靠的估计。","inLanguage":["en","zh-CN"],"sameAs":"https://www.nber.org/papers/w35877","publisher":{"@type":"Organization","name":"National Bureau of Economic Research"},"isPartOf":{"@type":"WebSite","name":"学术传送门 NBER 工作论文","url":"https://academic-door.github.io/nber-working-papers-cn/"},"datePublished":"2026-10-12"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"主页","item":"https://academic-door.github.io/nber-working-papers-cn/"},{"@type":"ListItem","position":2,"name":"NBER w35877","item":"https://academic-door.github.io/nber-working-papers-cn/papers/w35877.html"}]}</script>
+</head>
+<body id="top" data-build-version="20261020-warm-search-p95">
+  <header class="site-header compact detail-header">
+    <a class="detail-brand" href="../index.html">Academic Door · 学术传送门</a>
+  </header>
+  <main class="paper-page">
+    <nav class="site-nav" aria-label="站点导航"><a class="site-nav-link" href="../index.html">主页</a><a class="site-nav-link" href="../about.html">关于本站</a><a class="site-nav-link" href="../weekly/2026-10-26.html">最新周报</a><a class="site-nav-link" href="../index.html#archiveList">月度合集</a><a class="site-nav-link" href="../topics.html">研究专题</a><a class="site-nav-link" href="../feed.xml">RSS</a><span class="presence" data-presence-count aria-live="polite"></span></nav><script defer src="../assets/presence.js?v=20261020-warm-search-p95"></script><script defer src="../assets/page-tools.js?v=20261020-warm-search-p95"></script>
+    <article class="standalone-paper">
+      <div class="paper-detail-topline"><span>NBER Working Paper w35877</span><a href="../weekly/2026-10-12.html#w35877">所在周报</a></div>
+      <h1>Indirect Variational Inference: Applications to Earnings Dynamics</h1>
+      <p class="standalone-zh-title">间接变分推断：在收入动态中的应用</p>
+      <p class="authors">Neele L. Balke, Stéphane Bonhomme, Thibaut Lamadon</p>
+      <div class="paper-taxonomy">
+        <a href="../topics/education-labor.html">教育与劳动</a>
+        
+        <span>未指明区域</span>
+      </div>
+      <div class="abstract-pair">
+        <section class="abstract-block"><h2>Abstract</h2><p>Latent-variable models are central to economics but often entail intractable integration. Variational inference (VI), widely used in machine learning, turns this integration into tractable, differentiable optimization by replacing the likelihood with a variational objective. However, guarantees of recovering the true parameters remain limited when the variational family is insufficiently flexible—a key obstacle to the adoption of VI in economics. We first evaluate VI in models of earnings dynamics and show that the choice of variational posterior is crucial. We then introduce indirect variational inference (IVI), which treats VI as an auxiliary model and corrects the bias induced by the variational approximation. IVI retains much of VI’s tractability because it does not require computing the likelihood. We apply these methods to models allowing for nonlinear persistence, non-Gaussian and serially correlated transitory shocks, and latent heterogeneity. Across simulated and empirical applications, flexible variational families combined with IVI deliver reliable estimates.</p></section>
+        <section class="abstract-block zh-block"><h2>中文摘要</h2><p>潜变量模型是经济学的核心，但往往涉及难以处理的积分。变分推断（VI）在机器学习中被广泛使用，它通过用变分目标替代似然，将这种积分转化为可处理、可微的优化。然而，当变分族不够灵活时，恢复真实参数的保证仍然有限——这是VI在经济学中被采用的一个关键障碍。我们首先在收入动态模型中评估VI，并表明变分后验的选择至关重要。然后我们引入间接变分推断（IVI），它将VI视为一个辅助模型，并校正由变分近似所导致的偏差。IVI保留了VI的大部分可处理性，因为它不需要计算似然。我们将这些方法应用于允许非线性持续性、非高斯且序列相关的暂时性冲击以及潜在异质性的模型。在模拟和实证应用中，灵活的变分族与IVI相结合能够提供可靠的估计。</p></section>
+      </div>
+      <div class="paper-actions">
+        <a class="primary-action" href="https://www.nber.org/papers/w35877" target="_blank" rel="noopener">在 NBER 阅读原文</a>
+        <button type="button" data-copy-value="https://academic-door.github.io/nber-working-papers-cn/papers/w35877.html">分享链接</button>
+        <button type="button" data-copy-value="Neele L. Balke, Stéphane Bonhomme, Thibaut Lamadon. Indirect Variational Inference: Applications to Earnings Dynamics. NBER Working Paper 35877. https://www.nber.org/papers/w35877">复制题录</button>
+      </div>
+      <p class="action-feedback" data-copy-feedback aria-live="polite"></p>
+    </article>
+  </main>
+  <footer><p>本站为非官方学术交流项目，论文内容与版本信息请以 NBER 官网和论文原文为准。</p></footer>
+  <script src="../assets/static-paper.js?v=20261020-warm-search-p95"></script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"a28736d89a41412b92efe9024bfc08f2"}'></script>
+</body>
+</html>

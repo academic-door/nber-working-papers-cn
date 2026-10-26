@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="msvalidate.01" content="BACE8BE20C737E80A115F8B4963BA646">
+  <meta name="google-site-verification" content="XphD8mlEyX3Qu2VNh6tzQCe0kOIoQCzUxyZTALswuTA">
+  <title>fevc: Leave-Out Bias-Corrected Variance Decompositions in Stata｜NBER w35948｜学术传送门</title>
+  <meta name="description" content="来自含工人和企业固定效应回归的方差分解被广泛用于衡量关联数据中的异质性和排序。直接由估计效应计算的方差会高估异质性，因为其中包含估计噪声，且当在企业间流动的工人很少时，偏差可能很大。本文介绍 fevc，这是一个 Stata 命令，实现了 Kline、Saggio 和 Sølvsten（2020，“Leave-Out Estimation of Varianc">
+  <meta property="og:title" content="fevc：Stata 中的留出偏差校正方差分解｜NBER w35948">
+  <meta property="og:description" content="来自含工人和企业固定效应回归的方差分解被广泛用于衡量关联数据中的异质性和排序。直接由估计效应计算的方差会高估异质性，因为其中包含估计噪声，且当在企业间流动的工人很少时，偏差可能很大。本文介绍 fevc，这是一个 Stata 命令，实现了 Kline、Saggio 和 Sølvsten（2020，“Leave-Out Estimation of Varianc">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://academic-door.github.io/nber-working-papers-cn/papers/w35948.html">
+  <meta property="og:site_name" content="学术传送门 NBER 工作论文">
+  <link rel="canonical" href="https://academic-door.github.io/nber-working-papers-cn/papers/w35948.html">
+  <link rel="icon" href="../assets/images/academic-door-favicon.png" type="image/png">
+  <link rel="stylesheet" href="../assets/style.css?v=20261020-warm-search-p95">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ScholarlyArticle","headline":"fevc: Leave-Out Bias-Corrected Variance Decompositions in Stata","name":"fevc：Stata 中的留出偏差校正方差分解","url":"https://academic-door.github.io/nber-working-papers-cn/papers/w35948.html","mainEntityOfPage":"https://academic-door.github.io/nber-working-papers-cn/papers/w35948.html","identifier":"NBER Working Paper w35948","author":[{"@type":"Person","name":"Johannes F. Schmieder"}],"abstract":"来自含工人和企业固定效应回归的方差分解被广泛用于衡量关联数据中的异质性和排序。直接由估计效应计算的方差会高估异质性，因为其中包含估计噪声，且当在企业间流动的工人很少时，偏差可能很大。本文介绍 fevc，这是一个 Stata 命令，实现了 Kline、Saggio 和 Sølvsten（2020，“Leave-Out Estimation of Variance Components,” Econometrica 88: 1859–1898）的留出偏差校正。fevc 报告工人效应和企业效应的校正方差、二者的协方差及其和的方差。研究者可选择留出的单位、控制变量的处理方式以及定义所描述总体的权重。该命令还报告固定效应对可观测特征投影的标准误。它有两个后端：一个仅用源码的 Mata 实现，可在任何运行 Stata 的环境中运行；以及一个用于大型数据集的并行 Rust 插件。基于随机投影的计算报告衡量其数值精度的蒙特卡洛标准误。在意大利社会保障记录的公开摘录中，该校正使企业效应的估计方差减半，并逆转了工人—企业协方差的符号。在包含 640 万观测值和 28 个线程的合成基准测试中，Rust 后端比 Kline、Saggio 和 Sølvsten 的 Matlab 包快 1.3 至 3.5 倍。在匹配删除下，其测得峰值内存约为 Matlab 包的 30%。","inLanguage":["en","zh-CN"],"sameAs":"https://www.nber.org/papers/w35948","publisher":{"@type":"Organization","name":"National Bureau of Economic Research"},"isPartOf":{"@type":"WebSite","name":"学术传送门 NBER 工作论文","url":"https://academic-door.github.io/nber-working-papers-cn/"},"datePublished":"2026-10-26"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"主页","item":"https://academic-door.github.io/nber-working-papers-cn/"},{"@type":"ListItem","position":2,"name":"NBER w35948","item":"https://academic-door.github.io/nber-working-papers-cn/papers/w35948.html"}]}</script>
+</head>
+<body id="top" data-build-version="20261020-warm-search-p95">
+  <header class="site-header compact detail-header">
+    <a class="detail-brand" href="../index.html">Academic Door · 学术传送门</a>
+  </header>
+  <main class="paper-page">
+    <nav class="site-nav" aria-label="站点导航"><a class="site-nav-link" href="../index.html">主页</a><a class="site-nav-link" href="../about.html">关于本站</a><a class="site-nav-link" href="../weekly/2026-10-26.html">最新周报</a><a class="site-nav-link" href="../index.html#archiveList">月度合集</a><a class="site-nav-link" href="../topics.html">研究专题</a><a class="site-nav-link" href="../feed.xml">RSS</a><span class="presence" data-presence-count aria-live="polite"></span></nav><script defer src="../assets/presence.js?v=20261020-warm-search-p95"></script><script defer src="../assets/page-tools.js?v=20261020-warm-search-p95"></script>
+    <article class="standalone-paper">
+      <div class="paper-detail-topline"><span>NBER Working Paper w35948</span><a href="../weekly/2026-10-26.html#w35948">所在周报</a></div>
+      <h1>fevc: Leave-Out Bias-Corrected Variance Decompositions in Stata</h1>
+      <p class="standalone-zh-title">fevc：Stata 中的留出偏差校正方差分解</p>
+      <p class="authors">Johannes F. Schmieder</p>
+      <div class="paper-taxonomy">
+        <a href="../topics/other.html">其他主题</a>
+        
+        <span>意大利</span>
+      </div>
+      <div class="abstract-pair">
+        <section class="abstract-block"><h2>Abstract</h2><p>Variance decompositions from regressions with worker and firm fixed effects are widely used to measure heterogeneity and sorting in linked data. Variances computed directly from estimated effects overstate heterogeneity because they include estimation noise, and the bias can be large when few workers move between firms. This article introduces fevc, a Stata command that implements the leave-out bias correction of Kline, Saggio, and Sølvsten (2020, “Leave-Out Estimation of Variance Components,” Econometrica 88: 1859–1898). fevc reports corrected variances of worker and firm effects, their covariance, and the variance of their sum. Researchers choose the unit left out, the treatment of controls, and the weights that define the population being described. The command also reports standard errors for projections of fixed effects on observed characteristics. It has two backends: a source-only Mata implementation that runs wherever Stata runs, and a parallel Rust plugin for large datasets. Calculations based on random projections report Monte Carlo standard errors that measure their numerical precision. In a public extract of Italian social-security records, the correction halves the estimated variance of firm effects and reverses the sign of the worker–firm covariance. In synthetic benchmarks with 6.4 million observations and 28 threads, the Rust backend is 1.3 to 3.5 times as fast as the Matlab package of Kline, Saggio, and Sølvsten. Under match deletion, its measured peak memory is about 30 percent of the Matlab package’s.</p></section>
+        <section class="abstract-block zh-block"><h2>中文摘要</h2><p>来自含工人和企业固定效应回归的方差分解被广泛用于衡量关联数据中的异质性和排序。直接由估计效应计算的方差会高估异质性，因为其中包含估计噪声，且当在企业间流动的工人很少时，偏差可能很大。本文介绍 fevc，这是一个 Stata 命令，实现了 Kline、Saggio 和 Sølvsten（2020，“Leave-Out Estimation of Variance Components,” Econometrica 88: 1859–1898）的留出偏差校正。fevc 报告工人效应和企业效应的校正方差、二者的协方差及其和的方差。研究者可选择留出的单位、控制变量的处理方式以及定义所描述总体的权重。该命令还报告固定效应对可观测特征投影的标准误。它有两个后端：一个仅用源码的 Mata 实现，可在任何运行 Stata 的环境中运行；以及一个用于大型数据集的并行 Rust 插件。基于随机投影的计算报告衡量其数值精度的蒙特卡洛标准误。在意大利社会保障记录的公开摘录中，该校正使企业效应的估计方差减半，并逆转了工人—企业协方差的符号。在包含 640 万观测值和 28 个线程的合成基准测试中，Rust 后端比 Kline、Saggio 和 Sølvsten 的 Matlab 包快 1.3 至 3.5 倍。在匹配删除下，其测得峰值内存约为 Matlab 包的 30%。</p></section>
+      </div>
+      <div class="paper-actions">
+        <a class="primary-action" href="https://www.nber.org/papers/w35948" target="_blank" rel="noopener">在 NBER 阅读原文</a>
+        <button type="button" data-copy-value="https://academic-door.github.io/nber-working-papers-cn/papers/w35948.html">分享链接</button>
+        <button type="button" data-copy-value="Johannes F. Schmieder. fevc: Leave-Out Bias-Corrected Variance Decompositions in Stata. NBER Working Paper 35948. https://www.nber.org/papers/w35948">复制题录</button>
+      </div>
+      <p class="action-feedback" data-copy-feedback aria-live="polite"></p>
+    </article>
+  </main>
+  <footer><p>本站为非官方学术交流项目，论文内容与版本信息请以 NBER 官网和论文原文为准。</p></footer>
+  <script src="../assets/static-paper.js?v=20261020-warm-search-p95"></script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"a28736d89a41412b92efe9024bfc08f2"}'></script>
+</body>
+</html>

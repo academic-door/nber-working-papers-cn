@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="msvalidate.01" content="BACE8BE20C737E80A115F8B4963BA646">
+  <meta name="google-site-verification" content="XphD8mlEyX3Qu2VNh6tzQCe0kOIoQCzUxyZTALswuTA">
+  <title>HouseholdBench: Evaluating Large Language Models as Predictors of Household Economic Behavior｜NBER w35927｜学术传送门</title>
+  <meta name="description" content="大型语言模型（LLM）有潜力实现经济学的一个关键目标：一个适用于各种情境的家庭决策定量模型。然而，现有评估仅涵盖少数调查和结果，且未研究家庭如何适应变化的经济状况。我们引入一项新的评估——HouseholdBench，它整合了6项美国家庭调查和32项预测任务，涵盖数值、分类和概率结果，涉及消费、收入、劳动、预期和住房。利用过去行为、人口统计特征和宏观经济状况">
+  <meta property="og:title" content="HouseholdBench：评估大型语言模型作为家庭经济行为预测器｜NBER w35927">
+  <meta property="og:description" content="大型语言模型（LLM）有潜力实现经济学的一个关键目标：一个适用于各种情境的家庭决策定量模型。然而，现有评估仅涵盖少数调查和结果，且未研究家庭如何适应变化的经济状况。我们引入一项新的评估——HouseholdBench，它整合了6项美国家庭调查和32项预测任务，涵盖数值、分类和概率结果，涉及消费、收入、劳动、预期和住房。利用过去行为、人口统计特征和宏观经济状况">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://academic-door.github.io/nber-working-papers-cn/papers/w35927.html">
+  <meta property="og:site_name" content="学术传送门 NBER 工作论文">
+  <link rel="canonical" href="https://academic-door.github.io/nber-working-papers-cn/papers/w35927.html">
+  <link rel="icon" href="../assets/images/academic-door-favicon.png" type="image/png">
+  <link rel="stylesheet" href="../assets/style.css?v=20261020-warm-search-p95">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ScholarlyArticle","headline":"HouseholdBench: Evaluating Large Language Models as Predictors of Household Economic Behavior","name":"HouseholdBench：评估大型语言模型作为家庭经济行为预测器","url":"https://academic-door.github.io/nber-working-papers-cn/papers/w35927.html","mainEntityOfPage":"https://academic-door.github.io/nber-working-papers-cn/papers/w35927.html","identifier":"NBER Working Paper w35927","author":[{"@type":"Person","name":"Jin Huang"},{"@type":"Person","name":"Diego Ferreras Garrucho"},{"@type":"Person","name":"Yutong Xie"},{"@type":"Person","name":"Walter M. Yuan"},{"@type":"Person","name":"Qiaozhu Mei"},{"@type":"Person","name":"Chen Lian"},{"@type":"Person","name":"Jonathon Hazell"}],"abstract":"大型语言模型（LLM）有潜力实现经济学的一个关键目标：一个适用于各种情境的家庭决策定量模型。然而，现有评估仅涵盖少数调查和结果，且未研究家庭如何适应变化的经济状况。我们引入一项新的评估——HouseholdBench，它整合了6项美国家庭调查和32项预测任务，涵盖数值、分类和概率结果，涉及消费、收入、劳动、预期和住房。利用过去行为、人口统计特征和宏观经济状况，这些任务检验LLM是否能预测行为，包括家庭如何适应各种政策变化。我们评估了13个专有和开放权重LLM，并与无变化基线和梯度提升树模型进行比较。大多数LLM优于无变化基线，包括在政策响应任务上——最佳模型将数值结果的误差降低了12.2%。在大多数任务上，梯度提升树排名第一；领先的专有LLM接近其表现，但开放权重模型落后。LLM在不同任务上表现出系统性的高估和低估。我们识别出使一个40亿参数开放权重模型达到专有模型表现的方法：微调并对每个观测聚合16个预测。改进可推广到政策响应任务，而这些任务被排除在微调之外。我们在网站上发布数据集、代码和排行榜。","inLanguage":["en","zh-CN"],"sameAs":"https://www.nber.org/papers/w35927","publisher":{"@type":"Organization","name":"National Bureau of Economic Research"},"isPartOf":{"@type":"WebSite","name":"学术传送门 NBER 工作论文","url":"https://academic-door.github.io/nber-working-papers-cn/"},"datePublished":"2026-10-26"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"主页","item":"https://academic-door.github.io/nber-working-papers-cn/"},{"@type":"ListItem","position":2,"name":"NBER w35927","item":"https://academic-door.github.io/nber-working-papers-cn/papers/w35927.html"}]}</script>
+</head>
+<body id="top" data-build-version="20261020-warm-search-p95">
+  <header class="site-header compact detail-header">
+    <a class="detail-brand" href="../index.html">Academic Door · 学术传送门</a>
+  </header>
+  <main class="paper-page">
+    <nav class="site-nav" aria-label="站点导航"><a class="site-nav-link" href="../index.html">主页</a><a class="site-nav-link" href="../about.html">关于本站</a><a class="site-nav-link" href="../weekly/2026-10-26.html">最新周报</a><a class="site-nav-link" href="../index.html#archiveList">月度合集</a><a class="site-nav-link" href="../topics.html">研究专题</a><a class="site-nav-link" href="../feed.xml">RSS</a><span class="presence" data-presence-count aria-live="polite"></span></nav><script defer src="../assets/presence.js?v=20261020-warm-search-p95"></script><script defer src="../assets/page-tools.js?v=20261020-warm-search-p95"></script>
+    <article class="standalone-paper">
+      <div class="paper-detail-topline"><span>NBER Working Paper w35927</span><a href="../weekly/2026-10-26.html#w35927">所在周报</a></div>
+      <h1>HouseholdBench: Evaluating Large Language Models as Predictors of Household Economic Behavior</h1>
+      <p class="standalone-zh-title">HouseholdBench：评估大型语言模型作为家庭经济行为预测器</p>
+      <p class="authors">Jin Huang, Diego Ferreras Garrucho, Yutong Xie, Walter M. Yuan, Qiaozhu Mei, Chen Lian, Jonathon Hazell</p>
+      <div class="paper-taxonomy">
+        <a href="../topics/education-labor.html">教育与劳动</a>
+        
+        <span>美国</span>
+      </div>
+      <div class="abstract-pair">
+        <section class="abstract-block"><h2>Abstract</h2><p>Large language models (LLMs) have the potential to meet a key goal in economics: a quantitative model of household decision making, across a variety of settings. Yet existing evaluations cover few surveys and outcomes, and do not study how households adjust to changing economic conditions. We introduce a new evaluation, HouseholdBench, which unites 6 U.S. household surveys and 32 prediction tasks spanning numeric, categorical and probabilistic outcomes, related to consumption, income, labor, expectations, and housing. Using past behavior, demographics and macroeconomic conditions, the tasks test whether LLMs predict behavior, including how households adjust to changes in various policies. We evaluate 13 proprietary and open-weight LLMs against a no-change baseline and a gradient boosted tree model. Most LLMs outperform the no-change baseline, including for policy response tasks—with the best model lowering error for numeric outcomes by 12.2%. Across most tasks, gradient-boosted trees rank first; leading proprietary LLMs approach their performance, but open-weight models lag. LLMs exhibit systematic over- and underprediction across different tasks. We identify methods that enable a 4 billion parameter open-weight model to match proprietary models’ performance: fine-tuning and aggregating 16 predictions per observation. Improvements generalize to policy-response tasks, which are excluded from fine-tuning. We release our datasets, code, and leaderboard on our website.</p></section>
+        <section class="abstract-block zh-block"><h2>中文摘要</h2><p>大型语言模型（LLM）有潜力实现经济学的一个关键目标：一个适用于各种情境的家庭决策定量模型。然而，现有评估仅涵盖少数调查和结果，且未研究家庭如何适应变化的经济状况。我们引入一项新的评估——HouseholdBench，它整合了6项美国家庭调查和32项预测任务，涵盖数值、分类和概率结果，涉及消费、收入、劳动、预期和住房。利用过去行为、人口统计特征和宏观经济状况，这些任务检验LLM是否能预测行为，包括家庭如何适应各种政策变化。我们评估了13个专有和开放权重LLM，并与无变化基线和梯度提升树模型进行比较。大多数LLM优于无变化基线，包括在政策响应任务上——最佳模型将数值结果的误差降低了12.2%。在大多数任务上，梯度提升树排名第一；领先的专有LLM接近其表现，但开放权重模型落后。LLM在不同任务上表现出系统性的高估和低估。我们识别出使一个40亿参数开放权重模型达到专有模型表现的方法：微调并对每个观测聚合16个预测。改进可推广到政策响应任务，而这些任务被排除在微调之外。我们在网站上发布数据集、代码和排行榜。</p></section>
+      </div>
+      <div class="paper-actions">
+        <a class="primary-action" href="https://www.nber.org/papers/w35927" target="_blank" rel="noopener">在 NBER 阅读原文</a>
+        <button type="button" data-copy-value="https://academic-door.github.io/nber-working-papers-cn/papers/w35927.html">分享链接</button>
+        <button type="button" data-copy-value="Jin Huang, Diego Ferreras Garrucho, Yutong Xie, Walter M. Yuan, Qiaozhu Mei, Chen Lian, Jonathon Hazell. HouseholdBench: Evaluating Large Language Models as Predictors of Household Economic Behavior. NBER Working Paper 35927. https://www.nber.org/papers/w35927">复制题录</button>
+      </div>
+      <p class="action-feedback" data-copy-feedback aria-live="polite"></p>
+    </article>
+  </main>
+  <footer><p>本站为非官方学术交流项目，论文内容与版本信息请以 NBER 官网和论文原文为准。</p></footer>
+  <script src="../assets/static-paper.js?v=20261020-warm-search-p95"></script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"a28736d89a41412b92efe9024bfc08f2"}'></script>
+</body>
+</html>
